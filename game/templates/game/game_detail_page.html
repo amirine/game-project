@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'game/style.css' %}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@800&family=Roboto:wght@500&display=swap');
+    </style>
+</head>
+<body>
+
+<nav class="navbar bg-danger">
+    <div class="container-fluid">
+        <a class="navbar-brand text-white" href="#">
+            <img src="..." alt="" width="30" height="24"
+                 class="d-inline-block align-text-top">
+            <strong>GameMuster</strong>
+        </a>
+    </div>
+</nav>
+
+<!-- NAV #1 и HEADER -->
+<div class="container-fluid d-flex flex-column">
+    <div class="row flex-fill d-flex h-100 justify-content-start">
+        <div class="col-md-9 col-xl-9 col-sm-9 order-md-1 order-xl-0">
+            <div class="row">
+                <div class="col-md-8 col-xl-8 col-sm-8 order-md-1 order-xl-0">
+                    <h3>PACMAN
+                        <button class="btn btn-danger" type="button">MUST</button>
+                    </h3>
+                    <h6>arcade old school</h6>
+                </div>
+                <div class="col-md-4 col-xl-4 col-sm-4 order-md-1 order-xl-0">
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-md-8 col-xl-8 col-sm-8 order-md-1 order-xl-0">
+                    <h5>Description</h5>
+                    <p class="text-justify text-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                        eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                        exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+                    <h5>Release Date</h5>
+                    <p class="text-dark">November 2021</p>
+
+                    <h5>Screenshots</h5>
+
+                    <section>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                                <img src="https://mdbootstrap.com/img/screens/yt/screen-video-1.jpg" class="w-100"/>
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                                <img src="https://mdbootstrap.com/img/screens/yt/screen-video-1.jpg" class="w-100"/>
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                                <img src="https://mdbootstrap.com/img/screens/yt/screen-video-1.jpg" class="w-100"/>
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                                <img src="https://mdbootstrap.com/img/screens/yt/screen-video-1.jpg" class="w-100"/>
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                                <img src="https://mdbootstrap.com/img/screens/yt/screen-video-1.jpg" class="w-100"/>
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                                <img src="https://mdbootstrap.com/img/screens/yt/screen-video-1.jpg" class="w-100"/>
+                            </div>
+                        </div>
+
+
+                    </section>
+
+                </div>
+                <!-- HEADER -->
+                <div class="col-md-4 col-xl-4 col-sm-4">
+                    <h5>Ratings</h5>
+                    <div>
+                        <div class="container card bg-success text-white">
+                            <div class="row">
+                                <div class="col-xl-3 col-sm-3 col-md-3">
+                                    Users
+                                </div>
+                                <div class="col-xl-9 col-sm-9 col-md-9 text-right">
+                                    7.6 (123 reviews)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="container card bg-primary text-white">
+                            <div class="row">
+                                <div class="col-xl-3 col-sm-3 col-md-3 ">
+                                    Critics
+                                </div>
+                                <div class="col-xl-9 col-sm-9 col-md-9 text-right">
+                                    4.0 (123 reviews)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <h5>Genres</h5>
+                    <div class="d-grid gap-2 d-md-block">
+                        <button class="btn btn-danger" type="button">Arcade</button>
+                        <button class="btn btn-danger" type="button">Action</button>
+                    </div>
+
+                    <br>
+
+                    <h5>Platforms</h5>
+                    <div class="d-grid gap-2 d-md-block">
+                        <button class="btn btn-danger" type="button">PC</button>
+                        <button class="btn btn-danger" type="button">PS4</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-xl-3 col-sm-3 order-md-1 order-xl-0">
+
+            <h4>#Pacman Tweets</h4>
+
+            <div>
+                <div class="container card bg-danger text-white">
+                    <div class="card-body">
+                        <p class="card-text small text-justify">Some quick example text to build on the card title and
+                            make up the
+                            bulk of the card's content. Some quick example text to build on the card title and make up
+                            the bulk
+                            of the card's content. Some quick example text to build on the card title and make up the
+                            bulk
+                            of the card's content.</p>
+
+                        <div class="row">
+                            <div class="col-xl-6 col-sm-6 col-md-6">
+                                <p class="card-text small text-left">01.01.2021</p>
+                            </div>
+                            <div class="col-xl-6 col-sm-6 col-md-6">
+                                <p class="card-text small text-right">@tweet_author</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="container card bg-danger text-white">
+                    <div class="card-body">
+                        <p class="card-text small text-justify">Some quick example text to build on the card title and
+                            make up the
+                            bulk of the card's content. Some quick example text to build on the card title and make up
+                            the bulk
+                            of the card's content. Some quick example text to build on the card title and make up the
+                            bulk
+                            of the card's content.</p>
+
+                        <div class="row">
+                            <div class="col-xl-6 col-sm-6 col-md-6">
+                                <p class="card-text small text-left">01.01.2021</p>
+                            </div>
+                            <div class="col-xl-6 col-sm-6 col-md-6">
+                                <p class="card-text small text-right">@tweet_author</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="container card bg-danger text-white">
+                    <div class="card-body">
+                        <p class="card-text small text-justify">Some quick example text to build on the card title and
+                            make up the
+                            bulk of the card's content. Some quick example text to build on the card title and make up
+                            the bulk
+                            of the card's content. Some quick example text to build on the card title and make up the
+                            bulk
+                            of the card's content.</p>
+
+                        <div class="row">
+                            <div class="col-xl-6 col-sm-6 col-md-6">
+                                <p class="card-text small text-left">01.01.2021</p>
+                            </div>
+                            <div class="col-xl-6 col-sm-6 col-md-6">
+                                <p class="card-text small text-right">@tweet_author</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="container card bg-danger text-white">
+                    <div class="card-body">
+                        <p class="card-text small text-justify">Some quick example text to build on the card title and
+                            make up the
+                            bulk of the card's content. Some quick example text to build on the card title and make up
+                            the bulk
+                            of the card's content. Some quick example text to build on the card title and make up the
+                            bulk
+                            of the card's content.</p>
+
+                        <div class="row">
+                            <div class="col-xl-6 col-sm-6 col-md-6">
+                                <p class="card-text small text-left">01.01.2021</p>
+                            </div>
+                            <div class="col-xl-6 col-sm-6 col-md-6">
+                                <p class="card-text small text-right">@tweet_author</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript -->
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
+        integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
+        crossorigin="anonymous"></script>
+
+
+</body>
+</html>
