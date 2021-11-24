@@ -1,0 +1,260 @@
+/* Body Styles */
+
+body {
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: calc(0.2em + 1vw);
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+/* Sidebar Styles */
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled {
+    padding-left: -250px;
+}
+
+#sidebar-wrapper {
+    z-index: 1000;
+    position: fixed;
+    left: -250px;
+    width: 0;
+    height: 100%;
+    margin-left: 250px;
+    overflow-y: auto;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    width: 0;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    position: absolute;
+    padding: 15px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    margin-right: 0;
+}
+
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    text-indent: 20px;
+    line-height: 40px;
+}
+
+.sidebar-nav div {
+    text-indent: 0;
+    /*line-height: 10px;*/
+    margin: 0 0;
+}
+
+.sidebar-nav div span {
+    margin-right: 5px;
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-nav li a:active, .sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand a {
+    color: white;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+    color: #fff;
+    background: none;
+}
+
+@media (min-width: 768px) {
+    #wrapper {
+        padding-left: 0;
+    }
+
+    #wrapper.toggled {
+        padding-left: -250px;
+    }
+
+    #sidebar-wrapper {
+        width: 250px;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 0;
+    }
+
+    #page-content-wrapper {
+        padding: 20px;
+        position: relative;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-left: 0;
+    }
+}
+
+/* Game Cards Styles */
+
+.card-body {
+    margin: auto;
+    padding: 0 0;
+}
+
+.card-image-cover {
+    background-image: url('https://images.unsplash.com/photo-1531525645387-7f14be1bdbbd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80');
+    background-size: cover;
+    width: 17rem;
+    height: 17rem;
+    position: relative;
+}
+
+.span-image {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #000;
+    background: rgba(0, 0, 0, 0.6);
+    color: #FFF;
+    width: 100%;
+    height: 40%;
+}
+
+/* Search input Styles */
+
+.search-input-bborder {
+    border-top-style: hidden;
+    border-right-style: hidden;
+    border-left-style: hidden;
+    border-bottom: 1.5px solid black;
+    font-size: large;
+}
+
+.form-control:focus {
+    outline: 0 !important;
+    border-color: black;
+    box-shadow: none;
+}
+
+/* Buttons inside games cards styles */
+
+.btn-unstyle {
+    border: none;
+    background: inherit;
+    color: inherit;
+}
+
+/* Button MUST styles */
+
+.active {
+    background-color: gray !important;
+    border-color: gray !important;
+    color: white !important;
+}
+
+/* Page content type align style */
+
+#page-content {
+    display: grid;
+    grid-template-rows: 80px 1fr 80px;
+}
+
+/* Slider Styles */
+
+.multiple-range {
+    --begin: 0;
+    --end: 10;
+    --fill-color: white;
+    --progress-background: white;
+    --progress-radius: 10px;
+    --track-height: calc(var(--thumb-size) / 2);
+    --thumb-size: 10px;
+    --thumb-color: white;
+
+    display: grid;
+    position: relative;
+    background-image: linear-gradient(to right, transparent var(--begin), white var(--begin),
+    white var(--end), transparent var(--end)), linear-gradient(to right, white 0%, white 100%);
+    background-size: 100% 2px, 100% 2px;
+    background-position: left center;
+    background-repeat: no-repeat;
+}
+
+.multiple-range * {
+    grid-row-start: 1;
+    grid-column-start: 1;
+    pointer-events: none;
+    touch-action: none;
+}
+
+.multiple-range .scale {
+    display: flex;
+    justify-content: space-between;
+    align-self: start;
+}
+
+.multiple-range input {
+    width: 100%;
+    height: 60px;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+.multiple-range output {
+    position: absolute;
+    bottom: 0;
+    font-size: 80%;
+    color: white;
+    transform: translateX(-50%);
+}
+
+.multiple-range output:first-of-type {
+    left: var(--begin);
+}
+
+.multiple-range output:last-of-type {
+    left: var(--end);
+}

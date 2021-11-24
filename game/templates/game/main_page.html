@@ -1,0 +1,272 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}Games{% endblock %}
+
+{% block stylesheet %}
+
+    <!-- Extra Page Stylesheet -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.min.css">
+
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- Page Content but navbar -->
+    <div id="wrapper" class="toggled d-flex flex-grow-1">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper" class="bg-danger show-sidebar">
+            <ul class="sidebar-nav">
+
+                <!-- Sidebar header -->
+                <div class="container">
+                    <div class="row mt-3" id="filter-name">
+                        <p class="text-white mb-1"><i class="fas fa-caret-right p-2 ml-2"></i>FILTERS</p>
+                    </div>
+                </div>
+
+
+                <!-- Sidebar: platforms filter -->
+                <div class="container">
+                    <div class="row mt-3">
+                        <div class="input-group input-sm p-0">
+                            <p class="text-white ml-0 pt-3 pl-0 col-auto">Platforms</p>
+                            <input type="text" class="form-control bg-transparent border-right-0
+                            border-left-0 border-top-0 rounded-0 p-0">
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Platform badges with close button -->
+                        <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
+                         PC<button class="btn-unstyle pr-0">&times;</button></span>
+                        <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
+                         PS4<button class="btn-unstyle pr-0">&times;</button></span>
+                        <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
+                         ANOTHER1<button class="btn-unstyle pr-0">&times;</button></span>
+                        <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
+                         ANOTHER2<button class="btn-unstyle pr-0">&times;</button></span>
+
+                    </div>
+                </div>
+
+                <!-- Sidebar: genres filter -->
+                <div class="container">
+
+                    <div class="row mt-3">
+                        <div class="input-group input-sm p-0">
+                            <p class="text-white ml-0 pt-3 pl-0 col-auto">Genres</p>
+                            <input type="text" class="form-control bg-transparent border-right-0
+                            border-left-0 border-top-0 rounded-0 p-0">
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Genres badges with close button -->
+                        <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
+                         Platformer<button class="btn-unstyle pr-0">&times;</button></span>
+                    </div>
+                </div>
+
+                <!-- Sidebar: user rating -->
+                <div class="container">
+                    <div class="row mt-3">
+                        <p class="text-white mb-1">User Rating</p>
+                    </div>
+
+                    <!-- Range input -->
+                    <form>
+                        <div class="multiple-range" data-min-distance="0.5">
+                            <input id="rating-begin" name="rating-begin" type="range" min="0" max="10" step="0.5"
+                                   value="6">
+                            <output for="rating-begin" data-expression="${value}"></output>
+                            <input id="rating-end" name="rating-end" type="range" min="0" max="10" step="0.5" value="8">
+                            <output for="rating-end" data-expression="${value}"></output>
+                        </div>
+                    </form>
+
+                </div>
+
+                <!-- Apply button -->
+                <div class="container">
+                    <div class="row mt-3">
+                        <button class="btn btn-light text-danger" type="button" id="must-button">Apply</button>
+                    </div>
+                </div>
+
+            </ul>
+        </div><!-- Sidebar end -->
+
+        <!-- Page Content -->
+        <div id="page-content" class="container-fluid align-items-center">
+
+            <!-- First row after navbar: button > search input > blank space -->
+            <div class="row">
+
+                <!-- Column for button -->
+                <div class="col-sm-2 col-md-2 col-xl-2 d-flex align-items-center">
+                    <a href="#menu-toggle" id="menu-toggle" class="navbar-brand">
+                        <button class="btn btn-danger rounded-circle btn-lg">
+                            <i class="fas fa-caret-down"></i></button>
+                    </a>
+                </div>
+
+                <!-- Column for search input -->
+                <div class="col-sm-8 col-md-8 col-xl-8 align-items-center">
+                    <div class="row pr-4 pl-4 pb-0 pt-3">
+                        <div class="input-group">
+                            <input class="form-control py-2 rounded-0 bg-transparent search-input-bborder text-center"
+                                   type="text" placeholder="Search..." id="example-search-input">
+                            <span class="input-group-append">
+                            <div class="input-group-text bg-transparent rounded-0 search-input-bborder">
+                                <i class="fa fa-search"></i></div>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Row for basic content: game cards -->
+            <div class="row justify-content-center h-100 align-items-center">
+
+                <!-- Column to center game cards -->
+                <div class="col-xl-8 col-md-8 col-sm-8">
+
+                    <!-- Row with content: 3 cards per row -->
+                    <div class="row row-cols-md-3 row-cols-xl-3 p-3 align-items-center">
+
+                        <!-- Game cards -->
+                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
+
+                            <!-- Card image -->
+                            <div class="card-image-cover">
+
+                                <!-- Card grey cover -->
+                                <span class="span-image p-2">
+                                <h4>PACMAN</h4>
+                                <h6>arcade old school</h6>
+                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
+                                <button type="button" class="badge badge-light badge-pill border-0"
+                                        id="must-button-main">Must</button>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
+
+                            <!-- Card image -->
+                            <div class="card-image-cover">
+
+                                <!-- Card grey cover -->
+                                <span class="span-image p-2">
+                                <h4>PACMAN</h4>
+                                <h6>arcade old school</h6>
+                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
+                                <button type="button" class="badge badge-light badge-pill border-0"
+                                        id="must-button-main">Must</button>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
+
+                            <!-- Card image -->
+                            <div class="card-image-cover">
+
+                                <!-- Card grey cover -->
+                                <span class="span-image p-2">
+                                <h4>PACMAN</h4>
+                                <h6>arcade old school</h6>
+                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
+                                <button type="button" class="badge badge-light badge-pill border-0"
+                                        id="must-button-main">Must</button>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
+
+                            <!-- Card image -->
+                            <div class="card-image-cover">
+
+                                <!-- Card grey cover -->
+                                <span class="span-image p-2">
+                                <h4>PACMAN</h4>
+                                <h6>arcade old school</h6>
+                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
+                                <button type="button" class="badge badge-light badge-pill border-0"
+                                        id="must-button-main">Must</button>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
+
+                            <!-- Card image -->
+                            <div class="card-image-cover">
+
+                                <!-- Card grey cover -->
+                                <span class="span-image p-2">
+                                <h4>PACMAN</h4>
+                                <h6>arcade old school</h6>
+                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
+                                <button type="button" class="badge badge-light badge-pill border-0"
+                                        id="must-button-main">Must</button>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
+
+                            <!-- Card image -->
+                            <div class="card-image-cover">
+
+                                <!-- Card grey cover -->
+                                <span class="span-image p-2">
+                                <h4>PACMAN</h4>
+                                <h6>arcade old school</h6>
+                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
+                                <button type="button" class="badge badge-light badge-pill border-0"
+                                        id="must-button-main">Must</button>
+                            </span>
+                            </div>
+                        </div>
+
+
+                    </div> <!-- Row content (cards) end -->
+
+                </div><!-- Column to center cards end -->
+
+            </div><!-- Row for basic content end -->
+
+
+            <!-- Pagination -->
+            <div class="row justify-content-center">
+                <ul class="pagination justify-content-center">
+                    <div class="d-grid gap-2 d-md-block">
+                        <button class="btn btn-danger" type="button">1</button>
+                        <button class="btn btn-danger" type="button">2</button>
+                        <button class="btn btn-danger" type="button">3</button>
+                    </div>
+                </ul>
+            </div>
+
+
+        </div><!-- Page content but sidebar end -->
+
+    </div><!-- Page content including sidebar end -->
+
+{% endblock %}
+
+
+{% block script %}
+
+    <!-- Script for must button + sidebar opening button + slider -->
+    <script type="text/javascript" src={% static 'game/js/main_page.js' %}></script>
+
+{% endblock %}
