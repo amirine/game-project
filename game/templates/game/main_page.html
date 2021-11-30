@@ -31,7 +31,8 @@
                     </div>
                 </div>
 
-
+                <form id="training-form-edit" method="POST">
+                    {% csrf_token %}
                 <!-- Sidebar: platforms filter -->
                 <div class="container">
                     <div class="row mt-3">
@@ -40,9 +41,18 @@
                             <input type="text" class="form-control bg-transparent border-right-0
                             border-left-0 border-top-0 rounded-0 p-0">
                         </div>
+
+                        <!-- Sidebar: list of platforms from DB -->
+                        {% for platform in platforms %}
+                        <div class="form-check form-check-inline text-white pr-3 small">
+                            <input class="form-check-input" type="checkbox" id="{{ platform.abbreviation }}" value="{{ platform.id }}" name="platforms"
+                            {% if  platform.id in chosen_platforms %}checked{% endif %}>
+                            <label class="form-check-label" for="{{ platform.abbreviation }}">{{ platform.name }}</label>
+                        </div>
+                        {% endfor %}
                     </div>
 
-                    <div class="row">
+                    <div class="row mt-3">
 
                         <!-- Platform badges with close button -->
                         <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
@@ -66,9 +76,19 @@
                             <input type="text" class="form-control bg-transparent border-right-0
                             border-left-0 border-top-0 rounded-0 p-0">
                         </div>
+
+                        <!-- Sidebar: list of genres from DB -->
+                        {% for genre in genres %}
+                        <div class="form-check form-check-inline text-white pr-3 small">
+                            <input class="form-check-input" type="checkbox" id="{{ genre.name }}" value="{{ genre.id }}" name="genres"
+                                   {% if  genre.id in chosen_genres %}checked{% endif %}>
+                            <label class="form-check-label" for="{{ genre.name }}">{{ genre.name }}</label>
+                        </div>
+                        {% endfor %}
+
                     </div>
 
-                    <div class="row">
+                    <div class="row mt-3">
 
                         <!-- Genres badges with close button -->
                         <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
@@ -83,25 +103,25 @@
                     </div>
 
                     <!-- Range input -->
-                    <form>
                         <div class="multiple-range" data-min-distance="0.5">
-                            <input id="rating-begin" name="rating-begin" type="range" min="0" max="10" step="0.5"
-                                   value="6">
+                            <input id="rating-begin" name="rating-begin" type="range" min="0" max="100" step="1"
+                                   value="0" >
                             <output for="rating-begin" data-expression="${value}"></output>
-                            <input id="rating-end" name="rating-end" type="range" min="0" max="10" step="0.5" value="8">
+                            <input id="rating-end" name="rating-end" type="range" min="0" max="100" step="1"
+                                   value="100">
                             <output for="rating-end" data-expression="${value}"></output>
                         </div>
-                    </form>
 
                 </div>
 
                 <!-- Apply button -->
                 <div class="container">
                     <div class="row mt-3">
-                        <button class="btn btn-light text-danger" type="button" id="must-button">Apply</button>
+                        <button class="btn btn-light text-danger" type="submit" id="must-button">Apply</button>
                     </div>
                 </div>
 
+                </form>
             </ul>
         </div><!-- Sidebar end -->
 
@@ -146,97 +166,36 @@
                     <div class="row row-cols-md-3 row-cols-xl-3 p-3 align-items-center">
 
                         <!-- Game cards -->
-                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
+                        {% for game in page_obj %}
+                            <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
 
-                            <!-- Card image -->
-                            <div class="card-image-cover">
+                                <!-- Card image -->
+                                <div class="card-image-cover"
+                                     style="background-image: url({{ game.cover.image_id }}">
 
-                                <!-- Card grey cover -->
-                                <span class="span-image p-2">
-                                <h4>PACMAN</h4>
-                                <h6>arcade old school</h6>
-                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
+                                    <!-- Card grey cover -->
+                                    <span class="span-image p-2">
+                                <h4>{{ game.name }}</h4>
+
+                                {% if game.genres %}
+                                    <h6>
+                                    {% for genre in game.genres %}
+                                        {{ genre.name }}
+                                    {% endfor %}
+                                    </h6>
+                                {% else %}
+                                    <h6>No genres</h6>
+                                {% endif %}
+
+                                <a href="{% url 'detail_page' game.id %}">
+                                    <button type="button" class="badge badge-light badge-pill border-0">
+                                    Open</button></a>
                                 <button type="button" class="badge badge-light badge-pill border-0"
                                         id="must-button-main">Must</button>
                             </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
-
-                            <!-- Card image -->
-                            <div class="card-image-cover">
-
-                                <!-- Card grey cover -->
-                                <span class="span-image p-2">
-                                <h4>PACMAN</h4>
-                                <h6>arcade old school</h6>
-                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
-                                <button type="button" class="badge badge-light badge-pill border-0"
-                                        id="must-button-main">Must</button>
-                            </span>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
-
-                            <!-- Card image -->
-                            <div class="card-image-cover">
-
-                                <!-- Card grey cover -->
-                                <span class="span-image p-2">
-                                <h4>PACMAN</h4>
-                                <h6>arcade old school</h6>
-                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
-                                <button type="button" class="badge badge-light badge-pill border-0"
-                                        id="must-button-main">Must</button>
-                            </span>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
-
-                            <!-- Card image -->
-                            <div class="card-image-cover">
-
-                                <!-- Card grey cover -->
-                                <span class="span-image p-2">
-                                <h4>PACMAN</h4>
-                                <h6>arcade old school</h6>
-                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
-                                <button type="button" class="badge badge-light badge-pill border-0"
-                                        id="must-button-main">Must</button>
-                            </span>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
-
-                            <!-- Card image -->
-                            <div class="card-image-cover">
-
-                                <!-- Card grey cover -->
-                                <span class="span-image p-2">
-                                <h4>PACMAN</h4>
-                                <h6>arcade old school</h6>
-                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
-                                <button type="button" class="badge badge-light badge-pill border-0"
-                                        id="must-button-main">Must</button>
-                            </span>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
-
-                            <!-- Card image -->
-                            <div class="card-image-cover">
-
-                                <!-- Card grey cover -->
-                                <span class="span-image p-2">
-                                <h4>PACMAN</h4>
-                                <h6>arcade old school</h6>
-                                <button type="button" class="badge badge-light badge-pill border-0">Open</button>
-                                <button type="button" class="badge badge-light badge-pill border-0"
-                                        id="must-button-main">Must</button>
-                            </span>
-                            </div>
-                        </div>
-
+                        {% endfor %}
 
                     </div> <!-- Row content (cards) end -->
 
@@ -249,8 +208,12 @@
             <div class="row justify-content-center">
                 <ul class="pagination justify-content-center">
                     <div class="d-grid gap-2 d-md-block">
-                        <button class="btn btn-danger" type="button">1</button>
-                        <button class="btn btn-danger" type="button">2</button>
+                        <a href="?page=1" id="paginator-button" class="paginator-button">
+                            <button class="btn btn-danger" type="button">1</button>
+                        </a>
+                        <a href="?page=2" id="paginator-button" class="paginator-button">
+                            <button class="btn btn-danger" type="button">2</button>
+                        </a>
                         <button class="btn btn-danger" type="button">3</button>
                     </div>
                 </ul>

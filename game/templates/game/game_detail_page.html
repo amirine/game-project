@@ -18,7 +18,12 @@
                 <div class="row">
                     <div class="col-md-8 col-xl-8 col-sm-8 order-md-1 order-xl-0">
                         <div class="row">
-                            <div class="col-auto"><h2>PACMAN</h2><h6>arcade old school</h6></div>
+                            <div class="col-auto"><h2>{{ game.name }}</h2>
+                                <h6>
+                                    {% for genre in game.genres %}
+                                        {{ genre.name }}
+                                    {% endfor %}
+                                </h6></div>
                             <div class="col-auto">
                                 <button class="btn btn-danger" type="button" id="must-button">MUST</button>
                             </div>
@@ -35,59 +40,24 @@
                         <!-- Game description -->
                         <h5>Description</h5>
                         <p class="text-justify text-dark">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-                            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            {{ game.summary }}
                         </p>
 
                         <!-- Release date -->
                         <h5 class="mt-4">Release Date</h5>
-                        <p class="text-dark">November 2021</p>
+                        <p class="text-dark">{{ game.first_release_date }}</p>
 
                         <!-- Screenshots -->
                         <h5 class="mt-4">Screenshots</h5>
 
                         <!-- Section with screenshots -->
                         <div class="row">
-
+                            {% for screenshot in game.screenshots %}
                             <div class="col-lg-4 col-md-12 mb-lg-0 mt-2 mb-2">
-                                <img src="https://images.unsplash.com/photo-1533237264985-ee62f6d342bb?ixid=MnwxMjA3fDB8
-                                MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2069&q=80"
+                                <img src={{ screenshot.image_id }}
                                      class="w-100"/>
                             </div>
-
-                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0 mt-2 mb-2">
-                                <img src="https://images.unsplash.com/photo-1533237264985-ee62f6d342bb?ixid=MnwxMjA3fDB8
-                                MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2069&q=80"
-                                     class="w-100"/>
-                            </div>
-
-                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0 mt-2 mb-2">
-                                <img src="https://images.unsplash.com/photo-1533237264985-ee62f6d342bb?ixid=MnwxMjA3fDB8
-                                MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2069&q=80"
-                                     class="w-100"/>
-                            </div>
-
-                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0 mt-2 mb-2">
-                                <img src="https://images.unsplash.com/photo-1533237264985-ee62f6d342bb?ixid=MnwxMjA3fDB8
-                                MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2069&q=80"
-                                     class="w-100"/>
-                            </div>
-
-                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0 mt-2 mb-2">
-                                <img src="https://images.unsplash.com/photo-1533237264985-ee62f6d342bb?ixid=MnwxMjA3fDB8
-                                MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2069&q=80"
-                                     class="w-100"/>
-                            </div>
-
-                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0 mt-2 mb-2">
-                                <img src="https://images.unsplash.com/photo-1533237264985-ee62f6d342bb?ixid=MnwxMjA3fDB8
-                                MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2069&q=80"
-                                     class="w-100"/>
-                            </div>
-
+                            {% endfor %}
                         </div><!-- Section with screenshots end -->
                     </div><!-- Column left end -->
 
@@ -100,7 +70,8 @@
                         <div class="container card bg-success text-white mt-2 mb-2">
                             <div class="row">
                                 <div class="col-xl-3 col-sm-auto col-md-auto p-2">Users</div>
-                                <div class="col-xl-9 col-sm-auto col-md-auto text-right p-2">7.6 (123 reviews)</div>
+                                <div class="col-xl-9 col-sm-auto col-md-auto text-right p-2">
+                                    {{ game.rating }} ({{ game.rating_count }} reviews)</div>
                             </div>
                         </div>
 
@@ -108,7 +79,7 @@
                         <div class="container card bg-primary text-white mt-2 mb-2">
                             <div class="row">
                                 <div class="col-xl-3 col-sm-auto col-md-auto p-2">Critics</div>
-                                <div class="col-xl-9 col-sm-auto col-md-auto text-right p-2">4.0 (123 reviews)</div>
+                                <div class="col-xl-9 col-sm-auto col-md-auto text-right p-2">{{ game.aggregated_rating }} ({{ game.aggregated_rating_count }} reviews)</div>
                             </div>
                         </div>
                         <br>
@@ -117,8 +88,9 @@
                         <h5>Genres</h5>
                         <div class="container text-white mb-4">
                             <div class="row">
-                                <button class="btn btn-danger mt-2 mr-2" type="button">Arcade</button>
-                                <button class="btn btn-danger mt-2 mr-2" type="button">Action</button>
+                                {% for genre in game.genres %}
+                                <button class="btn btn-danger mt-2 mr-2" type="button">{{ genre.name }}</button>
+                                {% endfor %}
                             </div>
                         </div>
 
@@ -126,8 +98,9 @@
                         <h5>Platforms</h5>
                         <div class="container text-white mb-4">
                             <div class="row">
-                                <button class="btn btn-danger mt-2 mr-2" type="button">PC</button>
-                                <button class="btn btn-danger mt-2 mr-2" type="button">PS4</button>
+                                {% for platform in game.platforms %}
+                                <button class="btn btn-danger mt-2 mr-2" type="button">{{ platform.abbreviation }}</button>
+                                {% endfor %}
                             </div>
                         </div>
 
@@ -141,107 +114,29 @@
 
                 <h4>#Pacman Tweets</h4>
 
+                {% for tweet in tweets %}
                 <!-- Tweet card -->
                 <div class="container card bg-danger text-white mt-2 mb-2">
                     <div class="card-body p-1">
 
                         <!-- Tweet text -->
-                        <p class="card-text small text-justify">Some quick example text to build on the card title and
-                            make up the bulk of the card's content. Some quick example text to build on the card title
-                            and make up the bulk of the card's content.
+                        <p class="card-text small text-justify">
+                            {{ tweet.text }}
                         </p>
 
                         <!-- Tweet date and author -->
                         <div class="row">
-                            <div class="col-xl-6 col-sm-6 col-md-6">
-                                <p class="card-text small text-left">01.01.2021</p>
+                            <div class="col-xl-5 col-sm-5 col-md-5">
+                                <p class="card-text small text-left">{{ tweet.created_at }}</p>
                             </div>
-                            <div class="col-xl-6 col-sm-6 col-md-6">
-                                <p class="card-text small text-right">@tweet_author</p>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- Tweet card end -->
-                <div class="container card bg-danger text-white mt-2 mb-2">
-                    <div class="card-body p-1">
-
-                        <!-- Tweet text -->
-                        <p class="card-text small text-justify">Some quick example text to build on the card title and
-                            make up the bulk of the card's content. Some quick example text to build on the card title
-                            and make up the bulk of the card's content.
-                        </p>
-
-                        <!-- Tweet date and author -->
-                        <div class="row">
-                            <div class="col-xl-6 col-sm-6 col-md-6">
-                                <p class="card-text small text-left">01.01.2021</p>
-                            </div>
-                            <div class="col-xl-6 col-sm-6 col-md-6">
-                                <p class="card-text small text-right">@tweet_author</p>
+                            <div class="col-xl-7 col-sm-7 col-md-7">
+                                <p class="card-text small text-right">{{ tweet.author }}</p>
                             </div>
                         </div>
                     </div>
                 </div><!-- Tweet card end -->
-                <div class="container card bg-danger text-white mt-2 mb-2">
-                    <div class="card-body p-1">
 
-                        <!-- Tweet text -->
-                        <p class="card-text small text-justify">Some quick example text to build on the card title and
-                            make up the bulk of the card's content. Some quick example text to build on the card title
-                            and make up the bulk of the card's content.
-                        </p>
-
-                        <!-- Tweet date and author -->
-                        <div class="row">
-                            <div class="col-xl-6 col-sm-6 col-md-6">
-                                <p class="card-text small text-left">01.01.2021</p>
-                            </div>
-                            <div class="col-xl-6 col-sm-6 col-md-6">
-                                <p class="card-text small text-right">@tweet_author</p>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- Tweet card end -->
-                <div class="container card bg-danger text-white mt-2 mb-2">
-                    <div class="card-body p-1">
-
-                        <!-- Tweet text -->
-                        <p class="card-text small text-justify">Some quick example text to build on the card title and
-                            make up the bulk of the card's content. Some quick example text to build on the card title
-                            and make up the bulk of the card's content.
-                        </p>
-
-                        <!-- Tweet date and author -->
-                        <div class="row">
-                            <div class="col-xl-6 col-sm-6 col-md-6">
-                                <p class="card-text small text-left">01.01.2021</p>
-                            </div>
-                            <div class="col-xl-6 col-sm-6 col-md-6">
-                                <p class="card-text small text-right">@tweet_author</p>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- Tweet card end -->
-                <div class="container card bg-danger text-white mt-2 mb-2">
-                    <div class="card-body p-1">
-
-                        <!-- Tweet text -->
-                        <p class="card-text small text-justify">Some quick example text to build on the card title and
-                            make up the bulk of the card's content. Some quick example text to build on the card title
-                            and make up the bulk of the card's content.
-                        </p>
-
-                        <!-- Tweet date and author -->
-                        <div class="row">
-                            <div class="col-xl-6 col-sm-6 col-md-6">
-                                <p class="card-text small text-left">01.01.2021</p>
-                            </div>
-                            <div class="col-xl-6 col-sm-6 col-md-6">
-                                <p class="card-text small text-right">@tweet_author</p>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- Tweet card end -->
+                {% endfor %}
 
             </div><!-- Page content: tweets part end -->
         </div><!-- Page content main row end -->
