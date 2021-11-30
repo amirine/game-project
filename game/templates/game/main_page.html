@@ -33,93 +33,75 @@
 
                 <form id="training-form-edit" method="POST">
                     {% csrf_token %}
-                <!-- Sidebar: platforms filter -->
-                <div class="container">
-                    <div class="row mt-3">
-                        <div class="input-group input-sm p-0">
-                            <p class="text-white ml-0 pt-3 pl-0 col-auto">Platforms</p>
-                            <input type="text" class="form-control bg-transparent border-right-0
-                            border-left-0 border-top-0 rounded-0 p-0">
+                    <!-- Sidebar: platforms filter -->
+                    <div class="container">
+                        <div class="row mt-3">
+                            <div class="input-group input-sm p-0">
+                                <p class="text-white ml-0 pt-3 pl-0 col-auto">Platforms</p>
+                            </div>
+
+                            <!-- Sidebar: list of platforms from DB -->
+                            {% for platform in platforms %}
+                                <div class="form-check form-check-inline text-white pr-3 small">
+                                    <input class="form-check-input" type="checkbox" id="{{ platform.abbreviation }}"
+                                           value="{{ platform.id }}" name="platforms"
+                                           {% if  platform.id in chosen_platforms %}checked{% endif %}>
+                                    <label class="form-check-label" for="{{ platform.abbreviation }}">
+                                        {{ platform.name }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Sidebar: genres filter -->
+                    <div class="container">
+
+                        <div class="row mt-3">
+                            <div class="input-group input-sm p-0">
+                                <p class="text-white ml-0 pt-3 pl-0 col-auto">Genres</p>
+                            </div>
+
+                            <!-- Sidebar: list of genres from DB -->
+                            {% for genre in genres %}
+                                <div class="form-check form-check-inline text-white pr-3 small">
+                                    <input class="form-check-input" type="checkbox" id="{{ genre.name }}"
+                                           value="{{ genre.id }}" name="genres"
+                                           {% if  genre.id in chosen_genres %}checked{% endif %}>
+                                    <label class="form-check-label" for="{{ genre.name }}">{{ genre.name }}</label>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+
+                    <!-- Sidebar: user rating -->
+                    <div class="container">
+                        <div class="row mt-3">
+                            <p class="text-white mb-1">User Rating</p>
                         </div>
 
-                        <!-- Sidebar: list of platforms from DB -->
-                        {% for platform in platforms %}
-                        <div class="form-check form-check-inline text-white pr-3 small">
-                            <input class="form-check-input" type="checkbox" id="{{ platform.abbreviation }}" value="{{ platform.id }}" name="platforms"
-                            {% if  platform.id in chosen_platforms %}checked{% endif %}>
-                            <label class="form-check-label" for="{{ platform.abbreviation }}">{{ platform.name }}</label>
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="row mt-3">
-
-                        <!-- Platform badges with close button -->
-                        <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
-                         PC<button class="btn-unstyle pr-0">&times;</button></span>
-                        <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
-                         PS4<button class="btn-unstyle pr-0">&times;</button></span>
-                        <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
-                         ANOTHER1<button class="btn-unstyle pr-0">&times;</button></span>
-                        <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
-                         ANOTHER2<button class="btn-unstyle pr-0">&times;</button></span>
-
-                    </div>
-                </div>
-
-                <!-- Sidebar: genres filter -->
-                <div class="container">
-
-                    <div class="row mt-3">
-                        <div class="input-group input-sm p-0">
-                            <p class="text-white ml-0 pt-3 pl-0 col-auto">Genres</p>
-                            <input type="text" class="form-control bg-transparent border-right-0
-                            border-left-0 border-top-0 rounded-0 p-0">
-                        </div>
-
-                        <!-- Sidebar: list of genres from DB -->
-                        {% for genre in genres %}
-                        <div class="form-check form-check-inline text-white pr-3 small">
-                            <input class="form-check-input" type="checkbox" id="{{ genre.name }}" value="{{ genre.id }}" name="genres"
-                                   {% if  genre.id in chosen_genres %}checked{% endif %}>
-                            <label class="form-check-label" for="{{ genre.name }}">{{ genre.name }}</label>
-                        </div>
-                        {% endfor %}
-
-                    </div>
-
-                    <div class="row mt-3">
-
-                        <!-- Genres badges with close button -->
-                        <span class="badge badge-light badge-pill pl-2 mt-1 shadow-sm text-danger">
-                         Platformer<button class="btn-unstyle pr-0">&times;</button></span>
-                    </div>
-                </div>
-
-                <!-- Sidebar: user rating -->
-                <div class="container">
-                    <div class="row mt-3">
-                        <p class="text-white mb-1">User Rating</p>
-                    </div>
-
-                    <!-- Range input -->
+                        <!-- Range input -->
                         <div class="multiple-range" data-min-distance="0.5">
                             <input id="rating-begin" name="rating-begin" type="range" min="0" max="100" step="1"
-                                   value="0" >
+                                   value="
+
+                                           {% if  chosen_lower_rating_bound %}{{ chosen_lower_rating_bound }}{% else %}0{% endif %}">
                             <output for="rating-begin" data-expression="${value}"></output>
                             <input id="rating-end" name="rating-end" type="range" min="0" max="100" step="1"
-                                   value="100">
+                                   value="
+
+                                           {% if  chosen_upper_rating_bound %}{{ chosen_upper_rating_bound }}{% else %}100{% endif %}">
                             <output for="rating-end" data-expression="${value}"></output>
                         </div>
 
-                </div>
-
-                <!-- Apply button -->
-                <div class="container">
-                    <div class="row mt-3">
-                        <button class="btn btn-light text-danger" type="submit" id="must-button">Apply</button>
                     </div>
-                </div>
+
+                    <!-- Apply button -->
+                    <div class="container">
+                        <div class="row mt-3">
+                            <button class="btn btn-light text-danger" type="submit" id="must-button">Apply</button>
+                        </div>
+                    </div>
 
                 </form>
             </ul>
@@ -162,6 +144,8 @@
                 <!-- Column to center game cards -->
                 <div class="col-xl-8 col-md-8 col-sm-8">
 
+                    {% if page_obj.paginator.num_pages %}
+
                     <!-- Row with content: 3 cards per row -->
                     <div class="row row-cols-md-3 row-cols-xl-3 p-3 align-items-center">
 
@@ -170,34 +154,39 @@
                             <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
 
                                 <!-- Card image -->
-                                <div class="card-image-cover"
-                                     style="background-image: url({{ game.cover.image_id }}">
+                                <div class="card-image-cover">
+                                    <img class="card-img card-image-cover"
+                                         src="{% if game.cover.image_id %}{{ game.cover.image_id }}{% else %}
+                                          https://www.beddingwarehouse.com.au/wp-content/uploads/2016/01/placeholder-featured-image.png
+                                          {% endif %}" alt="Card image">
+                                    <div class="card-img-overlay">
 
-                                    <!-- Card grey cover -->
-                                    <span class="span-image p-2">
-                                <h4>{{ game.name }}</h4>
+                                        <!-- Card grey cover -->
+                                        <span class="span-image p-2">
+                                        <h4>{{ game.name }}</h4>
 
-                                {% if game.genres %}
-                                    <h6>
-                                    {% for genre in game.genres %}
-                                        {{ genre.name }}
-                                    {% endfor %}
-                                    </h6>
-                                {% else %}
-                                    <h6>No genres</h6>
-                                {% endif %}
+                                            {% if game.genres %}
+                                                <h6>{% for genre in game.genres %}{{ genre.name }} {% endfor %}</h6>
+                                            {% else %}
+                                                <h6>No genres</h6>
+                                            {% endif %}
 
-                                <a href="{% url 'detail_page' game.id %}">
-                                    <button type="button" class="badge badge-light badge-pill border-0">
-                                    Open</button></a>
-                                <button type="button" class="badge badge-light badge-pill border-0"
-                                        id="must-button-main">Must</button>
-                            </span>
+                                            <a href="{% url 'detail_page' game.id %}">
+                                    <button type="button" class="badge badge-light badge-pill border-0"
+                                            id="open-button-main">Open</button></a>
+                                    <button type="button" class="badge badge-light badge-pill border-0"
+                                            id="must-button-main">Must</button>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}
 
                     </div> <!-- Row content (cards) end -->
+
+                    {% else %}
+                        <p class="text-dark text-center">No games found</p>
+                    {% endif %}
 
                 </div><!-- Column to center cards end -->
 
@@ -208,13 +197,11 @@
             <div class="row justify-content-center">
                 <ul class="pagination justify-content-center">
                     <div class="d-grid gap-2 d-md-block">
-                        <a href="?page=1" id="paginator-button" class="paginator-button">
-                            <button class="btn btn-danger" type="button">1</button>
-                        </a>
-                        <a href="?page=2" id="paginator-button" class="paginator-button">
-                            <button class="btn btn-danger" type="button">2</button>
-                        </a>
-                        <button class="btn btn-danger" type="button">3</button>
+                        {% for page_number in page_obj.paginator.page_range %}
+                            <a href="?page={{ page_number }}" id="paginator-button" class="paginator-button">
+                                <button class="btn btn-danger" type="button">{{ page_number }}</button>
+                            </a>
+                        {% endfor %}
                     </div>
                 </ul>
             </div>

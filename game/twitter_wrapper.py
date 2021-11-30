@@ -37,6 +37,7 @@ class TwitterWrapper:
         """Handles request return: compares tweets texts and users"""
 
         hashtag_name = search_name.replace(' ', '')
+        print(hashtag_name)
         response_data = self.generate_url(hashtag_name)
         return [
             {
