@@ -89,6 +89,7 @@ class IGDBRequestsHandler(IGDBWrapper):
             if filters.get('platforms'):
                 query += f" & platforms = ({', '.join(filters['platforms'])})"
             query += ";"
+
         return self.get_json_data_by_query(query, "games")
 
     def get_game_detail_page_info(self, game_id: int) -> list:

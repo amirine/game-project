@@ -6,9 +6,13 @@ from django.core.paginator import Paginator
 
 
 class MainPageView(View):
-    """View for main page without filters"""
+    """
+    View for main page: displays main page without any filters.
+    Called by initial page entering and by navbar logo click.
+    """
 
-    def get(self, request):
+    @staticmethod
+    def get(request):
         """Gets games from database not filtered"""
 
         igdb = IGDBRequestsHandler()
@@ -21,8 +25,11 @@ class MainPageView(View):
         return render(request, 'game/main_page.html', context)
 
 
-class MainPageFilter(View):
-    """View for main page with filters"""
+class MainPageViewFilter(View):
+    """
+    View for main page with applied filters: handles requests after 'Apply' button click,
+    displayed in filters sidebar area. Get method handles pagination.
+    """
 
     def get(self, request):
         """Processes GET request to main page: displays games from database filtered by pages"""
@@ -64,9 +71,13 @@ class MainPageFilter(View):
 
 
 class MainPageViewSearch(View):
-    """View for search input processing"""
+    """
+    View for search input processing. Search starts after input and Enter click.
+    Performed by the name of the game.
+    """
 
-    def get(self, request):
+    @staticmethod
+    def get(request):
         """Gets IGDB data using search input"""
 
         igdb = IGDBRequestsHandler()
@@ -83,11 +94,14 @@ class MainPageViewSearch(View):
 
 
 class DetailPageView(View):
-    """View for detail page: displays wider info about the game"""
+    """
+    View for detail page: displays wider info about the games.
+    Games are followed by the tweets, containing hashtags with their names.
+    """
 
     @staticmethod
     def get(request, game_id):
-        """Gets game ingo by id and returns template"""
+        """Gets game info by id and returns template"""
 
         igdb = IGDBRequestsHandler()
         tweets = TwitterWrapper()
