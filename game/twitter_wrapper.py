@@ -3,6 +3,7 @@ import os
 
 
 class TwitterWrapper:
+
     twitter_requests_url = "https://api.twitter.com/2/tweets/search/recent"
 
     def get_bearer_token(self) -> str:
@@ -30,14 +31,12 @@ class TwitterWrapper:
 
         headers = self.get_headers()
         response = requests.get(TwitterWrapper.twitter_requests_url, headers=headers, params=params)
-        print(response.json())
         return response.json()
 
     def request_return_handle(self, search_name: str, limit: int) -> list:
         """Handles request return: compares tweets texts and users"""
 
         hashtag_name = search_name.replace(' ', '')
-        print(hashtag_name)
         response_data = self.generate_url(hashtag_name)
         return [
             {

@@ -1,29 +1,6 @@
 import os
 import requests
-from datetime import datetime
-
-
-class ValidateData:
-
-    @staticmethod
-    def validate(function_for_return_validation):
-        def wrapper(*args, **kwargs):
-            function_initial_return = function_for_return_validation(*args, **kwargs)
-            for data in function_initial_return:
-
-                if data.get('cover'):
-                    data['cover']['image_id'] = f"https://images.igdb.com/igdb/image/upload/t_720p/{data['cover']['image_id']}.jpg"
-
-                if data.get('screenshots'):
-                    for screenshot in data['screenshots']:
-                        screenshot['image_id'] = f"https://images.igdb.com/igdb/image/upload/t_720p/{screenshot['image_id']}.jpg"
-
-                if data.get('first_release_date'):
-                    data['first_release_date'] = datetime.fromtimestamp(data['first_release_date']).strftime("%b %Y")
-
-            return function_initial_return
-
-        return wrapper
+from game.igdb_data_format import format_data
 
 
 class IGDBWrapper:
@@ -78,17 +55,17 @@ class IGDBWrapper:
 
         return f'{IGDBWrapper.db_requests_url}/{endpoint}'
 
-    @ValidateData.validate
     def get_json_data_by_query(self, query: str, endpoint: str) -> list:
-        """Makes api request to IGDB and returns dict of required values using query input"""
+        """Makes api request to IGDB and returns list of required values using query input.
+           Format data function transforms a return to a required format"""
 
         headers = self.get_headers()
         url = self.generate_url_by_endpoint(endpoint)
         response = requests.post(url, headers=headers, data=query)
-        return response.json()
+        return format_data(response.json())
 
 
-class BasicIGDBRequestsHandler(IGDBWrapper):
+class IGDBRequestsHandler(IGDBWrapper):
 
     def get_genres(self) -> list:
         """Gets all genres names and ids of a database"""
@@ -119,3 +96,9 @@ class BasicIGDBRequestsHandler(IGDBWrapper):
             f"rating, rating_count, aggregated_rating, aggregated_rating_count; where id = {game_id};",
             "games"
         )[0]
+
+    def get_game_search_info(self, search_input: str, limit: int) -> list:
+        """Gets results of the search"""
+
+        return self.get_json_data_by_query(
+            f'fields name, genres.name, cover.image_id; search "{search_input}";limit {limit};', "games")
