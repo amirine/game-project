@@ -82,10 +82,13 @@ class IGDBRequestsHandler(IGDBWrapper):
 
         query = f"fields name, genres.name, cover.image_id; limit {limit}; "
         if filters:
-            query += f"where genres = ({', '.join(filters['genres'])}) & " \
-                     f"platforms = ({', '.join(filters['platforms'])}) & " \
-                     f"total_rating >= {filters['lower_rating_bound']} & " \
-                     f"total_rating <= {filters['upper_rating_bound']};"
+            query += f"where total_rating >= {filters['lower_rating_bound']} & " \
+                     f"total_rating <= {filters['upper_rating_bound']}"
+            if filters.get('genres'):
+                query += f" & genres = ({', '.join(filters['genres'])})"
+            if filters.get('platforms'):
+                query += f" & platforms = ({', '.join(filters['platforms'])})"
+            query += ";"
         return self.get_json_data_by_query(query, "games")
 
     def get_game_detail_page_info(self, game_id: int) -> list:

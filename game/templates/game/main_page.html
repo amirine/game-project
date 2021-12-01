@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <form id="training-form-edit" method="POST" action="{% url 'main_page' %}">
+                <form id="training-form-edit" method="POST" action="{% url 'main_page_filter' %}">
                     {% csrf_token %}
                     <!-- Sidebar: platforms filter -->
                     <div class="container">
@@ -122,11 +122,10 @@
                     <form id="search-data-form" method="GET" action="{% url 'main_page_search' %}">
                     <div class="row pr-4 pl-4 pb-0 pt-3">
                         <div class="input-group">
-{#                                {% csrf_token %}#}
                             <input class="form-control py-2 rounded-0 bg-transparent search-input-bborder text-center"
                                    type="text" placeholder="Search..." id="example-search-input" name="search-data">
                             <span class="input-group-append">
-                            <div class="input-group-text bg-transparent rounded-0 search-input-bborder" type="submit">
+                            <div class="input-group-text bg-transparent rounded-0 search-input-bborder">
                                 <i class="fa fa-search"></i></div>
                             </span>
                         </div>
