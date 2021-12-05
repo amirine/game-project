@@ -11,14 +11,17 @@ class MainPageView(View):
     Called by initial page entering and by navbar logo click.
     """
 
+    GAMES_LIMIT = 18
+    GAMES_PER_PAGE = 6
+
     @staticmethod
     def get(request):
         """Gets games from database not filtered"""
 
         igdb = IGDBRequestsHandler()
-        games = igdb.get_game_main_page_info(18)
+        games = igdb.get_game_main_page_info(MainPageView.GAMES_LIMIT)
         context = {
-            'page_obj': pagination_generate(request, games, 6),
+            'page_obj': pagination_generate(request, games, MainPageView.GAMES_PER_PAGE),
             'genres': igdb.get_genres(),
             'platforms': igdb.get_platforms(),
         }
@@ -30,6 +33,9 @@ class MainPageViewFilter(View):
     View for main page with applied filters: handles requests after 'Apply' button click,
     displayed in filters sidebar area. Get method handles pagination.
     """
+
+    GAMES_LIMIT = 18
+    GAMES_PER_PAGE = 6
 
     def get(self, request):
         """Processes GET request to main page: displays games from database filtered by pages"""
@@ -58,9 +64,9 @@ class MainPageViewFilter(View):
     def generate_context(request, igdb: IGDBRequestsHandler, filters: dict) -> dict:
         """Generates context for pages"""
 
-        games = igdb.get_game_main_page_info(18, filters)
+        games = igdb.get_game_main_page_info(MainPageViewFilter.GAMES_LIMIT, filters)
         return {
-            'page_obj': pagination_generate(request, games, 6),
+            'page_obj': pagination_generate(request, games, MainPageViewFilter.GAMES_PER_PAGE),
             'genres': igdb.get_genres(),
             'platforms': igdb.get_platforms(),
             'chosen_genres': list(map(int, filters.get('genres'))),
@@ -76,16 +82,19 @@ class MainPageViewSearch(View):
     Performed by the name of the game.
     """
 
+    GAMES_LIMIT = 18
+    GAMES_PER_PAGE = 6
+
     @staticmethod
     def get(request):
         """Gets IGDB data using search input"""
 
         igdb = IGDBRequestsHandler()
         request.session['search_game'] = request.GET.get('search-data') or request.session.get('search_game')
-        games = igdb.get_game_search_info(request.session.get('search_game'), 18)
+        games = igdb.get_game_search_info(request.session.get('search_game'), MainPageViewSearch.GAMES_LIMIT)
 
         context = {
-            'page_obj': pagination_generate(request, games, 6),
+            'page_obj': pagination_generate(request, games, MainPageViewSearch.GAMES_PER_PAGE),
             'genres': igdb.get_genres(),
             'platforms': igdb.get_platforms(),
         }
@@ -99,6 +108,8 @@ class DetailPageView(View):
     Games are followed by the tweets, containing hashtags with their names.
     """
 
+    TWEETS_LIMIT = 5
+
     @staticmethod
     def get(request, game_id):
         """Gets game info by id and returns template"""
@@ -109,7 +120,7 @@ class DetailPageView(View):
 
         context = {
             'game': game,
-            'tweets': tweets.request_return_handle(game['name'], 5),
+            'tweets': tweets.request_return_handle(game['name'], DetailPageView.TWEETS_LIMIT),
         }
 
         return render(request, 'game/game_detail_page.html', context)
