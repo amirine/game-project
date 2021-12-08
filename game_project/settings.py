@@ -38,7 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'game',
+    'allauth',
+    'allauth.account',
+    # 'allauth.socialaccount',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +136,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Initialize environment variables
 env = environ.Env()
 environ.Env.read_env()
+
+LOGIN_URL = 'login'
+
+SITE_ID = 1
+#
+# AUTHENTICATION_BACKENDS = (
+#     'django.contrib.auth.backends.ModelBackend',
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# )
+
+# AUTH_USER_MODEL = 'users.UserProfile'
+# ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+# ACCOUNT_EMAIL_REQUIRED = True
+# LOGIN_REDIRECT_URL = 'main_page'
+# # ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.CustomSignupForm'
+#
+# ACCOUNT_FORMS = {
+# 'signup': 'users.forms.CustomSignupForm',
+# }
+# ACCOUNT_EMAIL_VERIFICATION = 'none'
+# EMAIL_HOST = 'smtp.qq.com'
+# EMAIL_PORT = 25
+# EMAIL_HOST_USER = 'xxxx3116@qq.com' # ваш QQ Номер счета и код авторизации
+# EMAIL_HOST_PASSWORD = 'xxxx'
+# EMAIL_USE_TLS = True  # Здесь должно быть True, Иначе отправка не удалась
+# EMAIL_FROM = 'xxxx3116@qq.com' # ваш QQ номер аккаунта
+# DEFAULT_FROM_EMAIL = 'xxxx3116@qq.com'

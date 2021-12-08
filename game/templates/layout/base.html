@@ -26,13 +26,35 @@
 
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand bg-danger">
+<nav class="navbar navbar-expand bg-danger justify-content-between">
     <a class="navbar-brand text-white" href="{% url 'main_page' %}">
         <img src="https://www.pngkey.com/png/full/272-2725717_computer-vision-computer-vision-icon-png-white.png"
              alt="" width="30" height="24"
              class="d-inline-block align-text-top">
         <strong>GameMuster</strong>
     </a>
+
+    <!-- Right block of navbar -->
+    <div class="text-white">
+        {% if request.user.is_authenticated %}
+
+        <!-- Displays "My MUSTs" and "Log Out" buttons if user is authenticated -->
+        Hello, {{ request.user.username }}!
+        <a href="#" class="btn btn-light text-danger ml-2" type="submit" id="must-button" role="button">My MUSTs</a>
+        <a href="{% url 'logout' %}" class="btn btn-light text-danger" type="submit" id="must-button">Log Out</a>
+
+         {% else %}
+
+         <!-- Displays "Sign Up" and "Log In" buttons if user is not authenticated -->
+         <a href="{% url 'register' %}" class="btn btn-light text-danger" type="submit"
+            id="must-button">Sign Up</a>
+            or
+         <a href="{% url 'login' %}" class="btn btn-light text-danger" type="submit"
+            id="must-button">Log In</a>
+
+         {% endif %}
+    </div>
+
 </nav>
 
 
