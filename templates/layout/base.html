@@ -39,18 +39,24 @@
         {% if request.user.is_authenticated %}
 
         <!-- Displays "My MUSTs" and "Log Out" buttons if user is authenticated -->
-        Hello, {{ request.user.username }}!
-        <a href="#" class="btn btn-light text-danger ml-2" type="submit" id="must-button" role="button">My MUSTs</a>
-        <a href="{% url 'logout' %}" class="btn btn-light text-danger" type="submit" id="must-button">Log Out</a>
+        Hello, <a class="text-white" href="{% url 'profile_info' request.user.id %}">{{ request.user.username }}</a>!
+            <a href="#">
+                <button class="btn btn-success ml-2" type="submit" id="must-button">My MUSTs</button>
+            </a>
+            <a href="{% url 'account_logout' %}">
+                <button class="btn btn-light text-danger" type="submit" id="must-button">Log Out</button>
+            </a>
 
          {% else %}
 
          <!-- Displays "Sign Up" and "Log In" buttons if user is not authenticated -->
-         <a href="{% url 'register' %}" class="btn btn-light text-danger" type="submit"
-            id="must-button">Sign Up</a>
+         <a href="{% url 'account_signup' %}">
+             <button class="btn btn-light text-danger" type="submit" id="must-button">Sign Up</button>
+         </a>
             or
-         <a href="{% url 'login' %}" class="btn btn-light text-danger" type="submit"
-            id="must-button">Log In</a>
+         <a href="{% url 'account_login' %}">
+             <button class="btn btn-light text-danger" type="submit" id="must-button">Log In</button>
+         </a>
 
          {% endif %}
     </div>

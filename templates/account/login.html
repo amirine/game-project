@@ -1,0 +1,17 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Log In{% endblock %}
+
+{% block content %}
+
+    <div id="page-content" class="d-flex flex-column flex-grow-1 justify-content-center align-items-center">
+
+        <!-- Header for the form -->
+        <h2>Log In</h2>
+
+        <!-- Form from layout template -->
+        {% include "layout/base_form.html" with submit_button_text="Log In" %}
+
+    </div>
+
+{% endblock %}

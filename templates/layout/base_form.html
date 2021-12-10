@@ -1,0 +1,63 @@
+{% load widget_tweaks %}
+
+<!-- Form content for Sign Up and Log In -->
+<form method="POST" novalidate>
+    {% csrf_token %}
+
+    <!-- Hidden fields -->
+    {% for hidden_field in form.hidden_fields %}
+        {{ hidden_field }}
+    {% endfor %}
+
+    <!-- Non field errors -->
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Table for form inputs -->
+    <table>
+        {% for field in form.visible_fields %}
+            <tr>
+                <div class="form-group">
+                    <th class="text-right">{{ field.label_tag }}</th>
+                    <td>
+                        {% if form.is_bound %}
+
+                            <!-- Fields errors -->
+                            {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                {% for error in field.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% render_field field class="form-control is-valid" %}
+                            {% endif %}<!-- Fields errors end-->
+
+                        {% else %}
+                            {% render_field field class="form-control" %}
+                        {% endif %}
+
+                        <!-- Help text -->
+                        {% if field.help_text %}
+                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                    </td>
+                </div>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Submit button -->
+    <div class="d-flex flex-column justify-content-center align-items-center mt-2">
+        <button class="btn btn-danger" type="submit" id="must-button">
+            {{ submit_button_text }}
+        </button>
+    </div>
+
+</form>

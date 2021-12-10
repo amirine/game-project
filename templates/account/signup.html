@@ -1,0 +1,17 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+
+    <div id="page-content" class="d-flex flex-column flex-grow-1 justify-content-center align-items-center">
+
+        <!-- Header for the form -->
+        <h2>Sign Up</h2>
+
+        <!-- Form from layout template -->
+        {% include "layout/base_form.html" with submit_button_text="Sign me up!" %}
+
+    </div>
+
+{% endblock %}

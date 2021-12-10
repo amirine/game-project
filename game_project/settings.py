@@ -16,7 +16,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -42,8 +41,8 @@ INSTALLED_APPS = [
     'game',
     'allauth',
     'allauth.account',
-    # 'allauth.socialaccount',
     'users',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +60,7 @@ ROOT_URLCONF = 'game_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [os.path.join(BASE_DIR, "templates")]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -83,8 +82,12 @@ WSGI_APPLICATION = 'game_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USERNAME'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -137,29 +140,41 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 env = environ.Env()
 environ.Env.read_env()
 
-LOGIN_URL = 'login'
-
 SITE_ID = 1
-#
-# AUTHENTICATION_BACKENDS = (
-#     'django.contrib.auth.backends.ModelBackend',
-#     'allauth.account.auth_backends.AuthenticationBackend',
-# )
 
-# AUTH_USER_MODEL = 'users.UserProfile'
-# ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-# ACCOUNT_EMAIL_REQUIRED = True
-# LOGIN_REDIRECT_URL = 'main_page'
-# # ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.CustomSignupForm'
-#
-# ACCOUNT_FORMS = {
-# 'signup': 'users.forms.CustomSignupForm',
-# }
-# ACCOUNT_EMAIL_VERIFICATION = 'none'
-# EMAIL_HOST = 'smtp.qq.com'
-# EMAIL_PORT = 25
-# EMAIL_HOST_USER = 'xxxx3116@qq.com' # ваш QQ Номер счета и код авторизации
-# EMAIL_HOST_PASSWORD = 'xxxx'
-# EMAIL_USE_TLS = True  # Здесь должно быть True, Иначе отправка не удалась
-# EMAIL_FROM = 'xxxx3116@qq.com' # ваш QQ номер аккаунта
-# DEFAULT_FROM_EMAIL = 'xxxx3116@qq.com'
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+
+# Forms settings: new default custom forms for login and signup implemented
+ACCOUNT_FORMS = {
+    'signup': 'users.forms.CustomSignupForm',
+    'login': 'users.forms.CustomLoginForm',
+}
+
+# Log In and Log Out settings
+LOGIN_URL = 'account_login'
+LOGIN_REDIRECT_URL = 'main_page'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_EMAIL_REQUIRED = True
+
+# Email settings
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_FROM = os.getenv('EMAIL_HOST_USER')
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+# Email confirmation for signup settings
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[games.com]"
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
