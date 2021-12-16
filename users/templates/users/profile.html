@@ -1,0 +1,40 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+    <div id="page-content" class="flex-grow-1 ml-4 mt-4">
+
+        <h2>My Profile</h2>
+
+        <table>
+
+            <tr>
+                    <td class="text-right text-secondary">Username</td>
+                    <td>| {{ user.username }}</td>
+            </tr>
+            <tr>
+                    <td class="text-right text-secondary">Email</td>
+                    <td>| {{ user.email }}</td>
+            </tr>
+            <tr>
+                    <td class="text-right text-secondary">First Name</td>
+                    <td>| {{ user.first_name }}</td>
+            </tr>
+            <tr>
+                    <td class="text-right text-secondary">Last Name</td>
+                    <td>| {{ user.last_name }}</td>
+            </tr>
+            <tr>
+                    <td class="text-right text-secondary">Age</td>
+                    <td>| {{ user.userprofile.get_current_age }}</td>
+            </tr>
+
+    </table>
+
+    </div>
+
+{% endblock %}
+
