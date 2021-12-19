@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from game.igdb_wrapper import IGDBRequestsHandler
+from game.models import FavouriteGames
 from game.twitter_wrapper import TwitterWrapper
 from django.core.paginator import Paginator
 
@@ -121,9 +122,33 @@ class DetailPageView(View):
         context = {
             'game': game,
             'tweets': tweets.request_return_handle(game['name'], DetailPageView.TWEETS_LIMIT),
+            # 'is_soft_deleted': request.user.favouritegames_set.get(game_id=game_id).is_deleted,
+            'is_added': False,
         }
 
+        if game_id in [el.game_id for el in request.user.favouritegames_set.all()]:
+            context.update({'is_soft_deleted': request.user.favouritegames_set.get(game_id=game_id).is_deleted,
+                            'is_added': True})
+
         return render(request, 'game/game_detail_page.html', context)
+
+    def post(self, request, game_id):
+        """Gets game info by id and returns template"""
+
+        print("i'm in")
+
+        # current_game = FavouriteGames(game_id=game_id)
+
+        if game_id not in list(request.user.favouritegames_set.values_list('game_id', flat=True)):
+            request.user.favouritegames_set.create(game_id=game_id, user=request.user)
+            print('1')
+        else:
+            current_game = request.user.favouritegames_set.get(game_id=game_id)
+            current_game.is_deleted = not current_game.is_deleted
+            current_game.save()
+            print('2')
+
+        return redirect('detail_page', game_id)
 
 
 def pagination_generate(request, games: list, games_per_page: int) -> Paginator:
@@ -134,3 +159,47 @@ def pagination_generate(request, games: list, games_per_page: int) -> Paginator:
     page_obj = paginator.get_page(page_number)
 
     return page_obj
+
+
+class MustsPageView(View):
+    """
+    View for main page: displays main page without any filters.
+    Called by initial page entering and by navbar logo click.
+    """
+
+    GAMES_LIMIT = 18
+    GAMES_PER_PAGE = 12
+
+    @staticmethod
+    def get(request):
+        """Gets games from database not filtered"""
+
+        favourite_games = request.user.favouritegames_set.filter(is_deleted=False)
+        context = {
+            'page_obj': pagination_generate(request, favourite_games, MustsPageView.GAMES_PER_PAGE),
+        }
+
+        return render(request, 'game/musts_page.html', context)
+
+    def post(self, request):
+
+        print("i'm in")
+        game_id = int(request.POST['game_id'])
+        print(game_id)
+
+        if game_id not in list(request.user.favouritegames_set.values_list('game_id', flat=True)):
+            request.user.favouritegames_set.create(game_id=game_id, user=request.user)
+
+            print('1')
+        else:
+            current_game = request.user.favouritegames_set.get(game_id=game_id)
+            current_game.is_deleted = not current_game.is_deleted
+            current_game.save()
+            print('2')
+
+        favourite_games = request.user.favouritegames_set.all()
+        context = {
+            'page_obj': pagination_generate(request, favourite_games, MustsPageView.GAMES_PER_PAGE),
+        }
+
+        return render(request, 'game/musts_page.html', context)

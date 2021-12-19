@@ -147,6 +147,13 @@ body {
     position: relative;
 }
 
+.card-image-cover-musts {
+    background-size: cover;
+    width: 100%;
+    height: 11rem;
+    position: relative;
+}
+
 .span-image {
     display: block;
     position: absolute;
@@ -169,6 +176,14 @@ body {
 }
 
 .span-image h6 {
+    margin-bottom: 0.3rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.musts-card-line p, h6{
     margin-bottom: 0.3rem;
     display: -webkit-box;
     -webkit-line-clamp: 1;

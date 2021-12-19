@@ -1,0 +1,168 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}My Musts{% endblock %}
+
+{% block stylesheet %}
+
+    <!-- Extra Page Stylesheet -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.min.css">
+
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- Page Content but navbar -->
+    <div id="wrapper" class="toggled d-flex flex-grow-1">
+
+        <!-- Page Content -->
+        <div id="page-content" class="container-fluid align-items-center">
+
+            <!-- First row after navbar: button > search input > blank space -->
+            <div class="row">
+
+                <!-- Column for search input -->
+                <div class="col-sm-8 col-md-8 col-xl-8 align-items-center">
+                    <h2>My Musts</h2>
+                </div>
+
+            </div>
+
+
+            <!-- Row for basic content: game cards -->
+            <div class="row justify-content-center h-100 align-items-center">
+
+                <!-- Column to center game cards -->
+                <div class="col-xl-11 col-md-11 col-sm-11">
+
+                    {% if page_obj %}
+
+                        <!-- Row with content: 3 cards per row -->
+                        <div class="row row-cols-md-6 row-cols-xl-6 p-3 align-items-center">
+
+                            <!-- Game cards -->
+                            {% for game in page_obj %}
+                                <div class="col-xl-2 col-md-6 col-sm-12 d-flex justify-content-center p-2">
+
+                                    <!-- Card image -->
+                                    {#                                    <div class="card-image-cover-musts">#}
+                                    {#                                        <img class="card-image-cover-musts card-img "#}
+                                    {#                                             src="https://www.beddingwarehouse.com.au/wp-content/uploads/2016/01/placeholder-featured-image.png"#}
+                                    {#                                             alt="Card image">#}
+                                    {#                                        <div class="card-img-overlay">#}
+                                    {##}
+                                    {#                                        <!-- Card grey cover -->#}
+                                    {#                                        <span class="span-image p-2">#}
+                                    {##}
+                                    {#                                        <!-- Game title -->#}
+                                    {#                                        <h4>{{ game.get_game_info.name }}</h4>#}
+                                    {##}
+                                    {#                                                <!-- Game genres -->#}
+                                    {#                                                {% if game.get_game_info.genres %}#}
+                                    {#                                                    <h6>{% for genre in game.get_game_info.genres %}#}
+                                    {#                                                        {{ genre.name }} {% endfor %}</h6>#}
+                                    {#                                                {% else %}#}
+                                    {#                                                    <h6>No genres</h6>#}
+                                    {#                                                {% endif %}#}
+                                    {##}
+                                    {#                                                    <!-- Game button: must or unmust -->#}
+                                    {#                                                    <button class="btn btn-danger must-button {% if game.is_deleted %}#}
+                                    {#                                                    active {% endif %}" type="button"#}
+                                    {#                                                            data-url_root="{% url 'musts_page' %}"#}
+                                    {#                                                            data-game_id="{{ game.get_game_info.id }}"#}
+                                    {#                                                            name="game_id">#}
+                                    {#                                                        {% if game.is_deleted %}Не добавлена#}
+                                    {#                                                        {% else %}Добавлена{% endif %}#}
+                                    {#                                                    </button>#}
+                                    {##}
+                                    {#                                        </span>#}
+                                    {#                                        </div>#}
+                                    {#                                    </div>#}
+
+                                    <div class="card w-100">
+                                        <img class="card-img-top h-80"
+                                             src="{% if game.get_game_info.cover.image_id %}{{ game.get_game_info.cover.image_id }}{% else %}
+                                          https://www.beddingwarehouse.com.au/wp-content/uploads/2016/01/placeholder-featured-image.png
+                                          {% endif %}"
+                                             alt="Card image cap">
+                                        <div class="card-body row w-100 p-2">
+                                            <div class="col-xl-7 col-sm-7 col-md-7 p-0 musts-card-line">
+
+                                                <!-- Game title -->
+                                                <h6 class="card-title m-0">{{ game.get_game_info.name }}</h6>
+
+                                                 <!-- Game genres -->
+                                                {% if game.get_game_info.genres %}
+                                                    <p class="card-text text-muted small m-0">
+                                                        {% for genre in game.get_game_info.genres %}
+                                                        {{ genre.name }} {% endfor %}</p>
+                                                {% else %}
+                                                    <p class="card-text text-muted small m-0">No genres</p>
+                                                {% endif %}
+
+                                                <p class="card-text text-muted small">Users added: 25</p>
+
+                                            </div>
+                                            <div class="col-xl-5 col-sm-5 col-md-5 p-0">
+
+                                                <!-- Game button: must or unmust -->
+                                                <button class="btn btn-danger must-button {% if game.is_deleted %}
+                                                active {% endif %}" type="button"
+                                                        data-url_root="{% url 'musts_page' %}"
+                                                        data-game_id="{{ game.get_game_info.id }}"
+                                                        name="game_id">
+                                                    {% if game.is_deleted %}Не добавлена
+                                                    {% else %}Добавлена{% endif %}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            {% endfor %}
+
+                        </div> <!-- Row content (cards) end -->
+
+                    {% else %}
+                        <p class="text-dark text-center">No games found</p>
+                    {% endif %}
+
+                </div><!-- Column to center cards end -->
+
+            </div><!-- Row for basic content end -->
+
+
+            <!-- Pagination -->
+            <div class="row justify-content-center">
+                <ul class="pagination justify-content-center">
+                    <div class="d-grid gap-2 d-md-block">
+                        {% for page_number in page_obj.paginator.page_range %}
+                            <a href="?page={{ page_number }}" id="paginator-button" class="paginator-button">
+                                <button class="btn {% if page_number == page_obj.number %}btn-dark{% else %}
+                                        btn-danger{% endif %}" type="button">{{ page_number }}</button>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </ul>
+            </div>
+
+
+        </div><!-- Page content but sidebar end -->
+
+    </div><!-- Page content including sidebar end -->
+
+{% endblock %}
+
+
+{% block script %}
+
+    <!-- Script for must button + sidebar opening button + slider -->
+    <script type="text/javascript" src={% static 'game/js/game_detail_page.js' %}></script>
+
+{% endblock %}
