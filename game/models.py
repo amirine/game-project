@@ -16,14 +16,13 @@ class Game(models.Model):
         igdb = IGDBRequestsHandler()
         return igdb.get_game_detail_page_info(self.game_id)
 
-    def get_game_info_tweets(self, tweets_limit):
-        igdb = IGDBRequestsHandler()
-        game = igdb.get_musts_page_info(self.game_id)
-        tweets = TwitterWrapper()
-        return tweets.request_return_handle(game['name'], tweets_limit)
+    # def get_game_info_tweets(self, tweets_limit):
+    #     igdb = IGDBRequestsHandler()
+    #     game = igdb.get_musts_page_info(self.game_id)
+    #     tweets = TwitterWrapper()
+    #     return tweets.request_return_handle(game['name'], tweets_limit)
 
     def get_active_users_number(self):
-        # current_game = Game.objects.get(game_id=self.game_id)
         return self.usersfavouritegames_set.filter(is_deleted=False).count()
 
 
