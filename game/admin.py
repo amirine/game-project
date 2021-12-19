@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
-from game.models import FavouriteGames
+from game.models import Game
+from game.models import UsersFavouriteGames
 
-admin.site.register(FavouriteGames)
+admin.site.register(Game)
+admin.site.register(UsersFavouriteGames)

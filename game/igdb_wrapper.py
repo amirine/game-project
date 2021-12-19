@@ -111,6 +111,6 @@ class IGDBRequestsHandler(IGDBWrapper):
         """Gets musts page data from IGDB"""
 
         return self.get_json_data_by_query(
-            f"fields name, genres.name, first_release_date, cover.image_id; where id = {game_id};",
+            f"fields name, genres.name, cover.image_id; where id = {game_id};",
             "games"
         )[0]

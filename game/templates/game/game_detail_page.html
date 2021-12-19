@@ -18,7 +18,8 @@
                 <div class="row">
                     <div class="col-md-8 col-xl-8 col-sm-8 order-md-1 order-xl-0">
                         <div class="row">
-                            <div class="col-auto"><h2>{{ game.name }}</h2>
+                            <div class="col-auto">
+                                <h2>{{ game.name }}</h2>
                                 <h6>
                                     {% if game.genres %}
                                         {% for genre in game.genres %}{{ genre.name }} {% endfor %}
