@@ -106,7 +106,9 @@
                                                     <p class="card-text text-muted small m-0">No genres</p>
                                                 {% endif %}
 
-                                                <p class="card-text text-muted small">Users added: {{ user_game.game.get_active_users_number }}</p>
+                                                <p class="card-text text-muted small" id="users-added">
+                                                    Users added: {{ user_game.game.get_active_users_number }}
+                                                </p>
 
                                             </div>
                                             <div class="col-xl-5 col-sm-5 col-md-5 p-0">
@@ -163,7 +165,7 @@
 
 {% block script %}
 
-    <!-- Script for must button + sidebar opening button + slider -->
-    <script type="text/javascript" src={% static 'game/js/game_detail_page.js' %}></script>
+    <!-- Script for must button -->
+    <script type="text/javascript" src={% static 'game/js/must_button.js' %}></script>
 
 {% endblock %}

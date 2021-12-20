@@ -27,12 +27,12 @@
                                 </h6>
                             </div>
                             <div class="col-auto">
-                                <button class="btn btn-danger must-button {% if not is_added or is_soft_deleted %}
+                                <button class="btn btn-danger must-button {% if not is_added %}
                                     active {% endif %}" type="button"
                                             data-url_root="{% url 'detail_page' game.id %}"
                                             data-game_id="{{ game.id }}"
                                             name="game_id">
-                                        {% if not is_added or is_soft_deleted %}Не добавлена
+                                        {% if not is_added %}Не добавлена
                                         {% else %}Добавлена{% endif %}
                                 </button>
                             </div>
@@ -191,6 +191,6 @@
 {% block script %}
 
     <!-- jQuery for must button -->
-    <script type="text/javascript" src={% static 'game/js/game_detail_page.js' %}></script>
+    <script type="text/javascript" src={% static 'game/js/must_button.js' %}></script>
 
 {% endblock %}
