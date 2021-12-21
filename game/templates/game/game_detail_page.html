@@ -27,13 +27,13 @@
                                 </h6>
                             </div>
                             <div class="col-auto">
-                                <button class="btn btn-danger must-button {% if not is_added %}
+                                <button class="btn btn-danger must-button {% if is_added %}
                                     active {% endif %}" type="button"
                                             data-url_root="{% url 'detail_page' game.id %}"
                                             data-game_id="{{ game.id }}"
                                             name="game_id">
-                                        {% if not is_added %}Не добавлена
-                                        {% else %}Добавлена{% endif %}
+                                        {% if not is_added %}Must
+                                        {% else %}Unmust{% endif %}
                                 </button>
                             </div>
                         </div>

@@ -169,12 +169,23 @@
                                                 <h6>No genres</h6>
                                             {% endif %}
 
-                                            <!-- Open game info button -->
-                                            <a href="{% url 'detail_page' game.id %}">
-                                    <button type="button" class="badge badge-light badge-pill border-0"
-                                            id="open-button-main">Open</button></a>
-                                    <button type="button" class="badge badge-light badge-pill border-0"
-                                            id="must-button-main">Must</button>
+                                    <!-- Open game info button -->
+                                    <a href="{% url 'detail_page' game.id %}">
+                                        <button type="button" class="badge badge-light badge-pill border-0"
+                                                id="open-button-main">Open
+                                        </button>
+                                    </a>
+
+                                    <!-- Must game button -->
+                                    <button class="badge badge-light badge-pill border-0 must-button
+                                        {% if game.id in user_favourite_games %}active{% endif %}" type="button"
+                                            data-url_root="{% url 'detail_page' game.id %}"
+                                            data-game_id="{{ game.id }}"
+                                            name="game_id">
+                                        {% if game.id in user_favourite_games %}Unmust
+                                        {% else %}Must{% endif %}
+                                    </button>
+
                                         </span>
                                     </div>
                                 </div>
@@ -197,10 +208,10 @@
                 <ul class="pagination justify-content-center">
                     <div class="d-grid gap-2 d-md-block">
                         {% for page_number in page_obj.paginator.page_range %}
-                            <a href="?page={{ page_number }}" id="paginator-button" class="paginator-button">
-                                <button class="btn {% if page_number == page_obj.number %}btn-dark{% else %}
-                                        btn-danger{% endif %}" type="button">{{ page_number }}</button>
-                            </a>
+                                <button onclick="location.href='?page={{ page_number }}'"
+                                        class="btn {% if page_number == page_obj.number %}btn-dark{% else %}
+                                        btn-danger{% endif %}" type="button">{{ page_number }}
+                                </button>
                         {% endfor %}
                     </div>
                 </ul>
@@ -218,5 +229,6 @@
 
     <!-- Script for must button + sidebar opening button + slider -->
     <script type="text/javascript" src={% static 'game/js/main_page.js' %}></script>
+    <script type="text/javascript" src={% static 'game/js/must_button.js' %}></script>
 
 {% endblock %}

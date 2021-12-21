@@ -13,9 +13,9 @@ $(document).ready(function () {
             },
             success: function () {
                 if (current_button.hasClass('active')) {
-                    current_button.removeClass('active').text('Добавлена').button("refresh");
+                    current_button.removeClass('active').text('Must').button("refresh");
                 } else {
-                    current_button.addClass("active").text('Не добавлена').button("refresh");
+                    current_button.addClass("active").text('Unmust').button("refresh");
                 }
             },
         });

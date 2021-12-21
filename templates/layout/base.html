@@ -40,23 +40,19 @@
 
         <!-- Displays "My MUSTs" and "Log Out" buttons if user is authenticated -->
         Hello, <a class="text-white" href="{% url 'profile_info' request.user.id %}">{{ request.user.username }}</a>!
-            <a href="{% url 'musts_page' %}">
-                <button class="btn btn-success ml-2" type="submit" id="must-button-1">My MUSTs</button>
-            </a>
-            <a href="{% url 'account_logout' %}">
-                <button class="btn btn-light text-danger" type="submit" id="must-button">Log Out</button>
-            </a>
+                <button onclick="location.href={% url 'musts_page' %}" class="btn btn-success ml-2"
+                        type="submit" id="must-button">My MUSTs</button>
+                <button onclick="location.href={% url 'account_logout' %}" class="btn btn-light text-danger"
+                        type="submit" id="must-button">Log Out</button>
 
          {% else %}
 
          <!-- Displays "Sign Up" and "Log In" buttons if user is not authenticated -->
-         <a href="{% url 'account_signup' %}">
-             <button class="btn btn-light text-danger" type="submit" id="must-button">Sign Up</button>
-         </a>
+             <button onclick="location.href={% url 'account_signup' %}" class="btn btn-light text-danger"
+                     type="submit" id="must-button">Sign Up</button>
             or
-         <a href="{% url 'account_login' %}">
-             <button class="btn btn-light text-danger" type="submit" id="must-button">Log In</button>
-         </a>
+             <button onclick="location.href={% url 'account_login' %}" class="btn btn-light text-danger"
+                     type="submit" id="must-button">Log In</button>
 
          {% endif %}
     </div>

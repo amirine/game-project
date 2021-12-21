@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
 from game.igdb_wrapper import IGDBRequestsHandler
-from game.models import UsersFavouriteGames, Game
+from game.models import Game
 from game.twitter_wrapper import TwitterWrapper
 from django.core.paginator import Paginator
 
@@ -26,6 +26,8 @@ class MainPageView(View):
             'page_obj': pagination_generate(request, games, MainPageView.GAMES_PER_PAGE),
             'genres': igdb.get_genres(),
             'platforms': igdb.get_platforms(),
+            'user_favourite_games': list(request.user.favourites.filter(is_deleted=False).
+                                         values_list('game__game_id', flat=True)),
         }
         return render(request, 'game/main_page.html', context)
 
@@ -131,8 +133,8 @@ class DetailPageView(View):
 
     def post(self, request, game_id):
         """
-        Adds game to favourites on must button click,
-        deletes game from favourites on unmust button click
+        Adds game to favourites on must button click, deletes game from favourites on unmust button click.
+        Works on both main and musts pages must buttons.
         """
 
         if game_id not in list(request.user.favourites.values_list('game__game_id', flat=True)):
@@ -141,7 +143,7 @@ class DetailPageView(View):
         else:
             request.user.favourites.get(game__game_id=game_id).delete()
 
-        return HttpResponse(200)
+        return HttpResponse(status=200)
 
 
 class MustsPageView(View):
@@ -168,7 +170,7 @@ class MustsPageView(View):
     def post(self, request):
         """
         Soft deletes or adds to favourites again on button click: soft deleted items displayed.
-        (After page reloading - get method - soft deleted items are deleted completely and no more displayed)
+        After page reloading - get method - soft deleted items are deleted completely and no more displayed
         """
 
         game_id = int(request.POST['game_id'])
@@ -177,7 +179,7 @@ class MustsPageView(View):
         current_user_game.is_deleted = not current_user_game.is_deleted
         current_user_game.save()
 
-        return HttpResponse(200)
+        return HttpResponse(status=200)
 
 
 def pagination_generate(request, games: list, games_per_page: int) -> Paginator:
