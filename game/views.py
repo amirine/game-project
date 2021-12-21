@@ -26,9 +26,14 @@ class MainPageView(View):
             'page_obj': pagination_generate(request, games, MainPageView.GAMES_PER_PAGE),
             'genres': igdb.get_genres(),
             'platforms': igdb.get_platforms(),
-            'user_favourite_games': list(request.user.favourites.filter(is_deleted=False).
-                                         values_list('game__game_id', flat=True)),
         }
+
+        if request.user.is_authenticated:
+            context.update({
+                'user_favourite_games': list(request.user.favourites.filter(is_deleted=False).
+                                             values_list('game__game_id', flat=True))
+            })
+
         return render(request, 'game/main_page.html', context)
 
 
@@ -126,8 +131,12 @@ class DetailPageView(View):
         context = {
             'game': game,
             'tweets': tweets.request_return_handle(game['name'], DetailPageView.TWEETS_LIMIT),
-            'is_added': game_id in list(request.user.favourites.values_list('game__game_id', flat=True)),
         }
+
+        if request.user.is_authenticated:
+            context.update({
+                'is_added': game_id in list(request.user.favourites.values_list('game__game_id', flat=True))
+            })
 
         return render(request, 'game/game_detail_page.html', context)
 

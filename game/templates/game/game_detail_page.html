@@ -26,7 +26,11 @@
                                     {% else %}No genres{% endif %}
                                 </h6>
                             </div>
+
                             <div class="col-auto">
+
+                                {% if request.user.is_authenticated %}
+
                                 <button class="btn btn-danger must-button {% if is_added %}
                                     active {% endif %}" type="button"
                                             data-url_root="{% url 'detail_page' game.id %}"
@@ -35,6 +39,9 @@
                                         {% if not is_added %}Must
                                         {% else %}Unmust{% endif %}
                                 </button>
+
+                                {% endif %}
+
                             </div>
                         </div>
                     </div>
