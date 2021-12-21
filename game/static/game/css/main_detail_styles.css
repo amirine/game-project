@@ -180,7 +180,6 @@ body {
 
 .card-image-cover-musts {
     background-size: cover;
-    width: 12rem;
     height: 11rem;
     position: relative;
 }

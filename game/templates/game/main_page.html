@@ -177,6 +177,7 @@
                                     </a>
 
                                     <!-- Must game button -->
+                                    {% if request.user.is_authenticated %}
                                     <button class="badge badge-light badge-pill border-0 must-button
                                         {% if game.id in user_favourite_games %}active{% endif %}" type="button"
                                             data-url_root="{% url 'detail_page' game.id %}"
@@ -185,6 +186,7 @@
                                         {% if game.id in user_favourite_games %}Unmust
                                         {% else %}Must{% endif %}
                                     </button>
+                                    {% endif %}
 
                                         </span>
                                     </div>
