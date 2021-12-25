@@ -8,7 +8,7 @@ class Game(models.Model):
 
     game_id = models.IntegerField()
 
-    def get_game_info_musts(self):
+    def get_game_info_by_id(self):
         """Gets game info for must page by game_id"""
 
         igdb = IGDBRequestsHandler()
@@ -19,7 +19,7 @@ class Game(models.Model):
 
 
 class UserFavouriteGame(models.Model):
-    """Model for user - favourite game pairs (soft deleted or not) """
+    """Model for user - favourite game pairs (soft deleted or not)"""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)

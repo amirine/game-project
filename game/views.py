@@ -135,7 +135,8 @@ class DetailPageView(View):
 
         if request.user.is_authenticated:
             context.update({
-                'is_added': game_id in list(request.user.favourites.values_list('game__game_id', flat=True))
+                'is_added': game_id in list(request.user.favourites.filter(is_deleted=False).
+                                            values_list('game__game_id', flat=True))
             })
 
         return render(request, 'game/game_detail_page.html', context)
@@ -150,7 +151,9 @@ class DetailPageView(View):
             current_game, created = Game.objects.get_or_create(game_id=game_id)
             request.user.favourites.create(game=current_game, user=request.user)
         else:
-            request.user.favourites.get(game__game_id=game_id).delete()
+            current_game = request.user.favourites.get(game__game_id=game_id)
+            current_game.is_deleted = not current_game.is_deleted
+            current_game.save()
 
         return HttpResponse(status=200)
 
@@ -166,10 +169,9 @@ class MustsPageView(View):
 
     @staticmethod
     def get(request):
-        """Gets favourite user games (soft deleted items are deleted completely) """
+        """Gets favourite user games (soft deleted items are not displayed)"""
 
-        request.user.favourites.filter(is_deleted=True).delete()
-        favourite_games = request.user.favourites.all()
+        favourite_games = request.user.favourites.filter(is_deleted=False)
         context = {
             'page_obj': pagination_generate(request, favourite_games, MustsPageView.GAMES_PER_PAGE),
         }
@@ -179,7 +181,7 @@ class MustsPageView(View):
     def post(self, request):
         """
         Soft deletes or adds to favourites again on button click: soft deleted items displayed.
-        After page reloading - get method - soft deleted items are deleted completely and no more displayed
+        After page reloading - get method - soft deleted items no more displayed.
         """
 
         game_id = int(request.POST['game_id'])

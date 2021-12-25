@@ -1,5 +1,6 @@
 {% extends "layout/base.html" %}
 {% load static %}
+{% load game_tags %}
 
 {% block title %}My Musts{% endblock %}
 
@@ -52,8 +53,8 @@
                                     <!-- Card image -->
                                     <div class="card w-100">
                                         <img class="card-img-top card-image-cover-musts"
-                                             src="{% if user_game.game.get_game_info_musts.cover.image_id %}
-                                                {{ user_game.game.get_game_info_musts.cover.image_id }}{% else %}
+                                             src="{% if user_game.game.get_game_info_by_id.cover.image_id %}
+                                                {{ user_game.game.get_game_info_by_id.cover.image_id }}{% else %}
                                           https://www.beddingwarehouse.com.au/wp-content/uploads/2016/01/placeholder-featured-image.png
                                           {% endif %}"
                                              alt="Card image cap">
@@ -61,22 +62,23 @@
                                             <div class="col-xl-7 col-sm-7 col-md-7 p-0 musts-card-line">
 
                                                 <!-- Game title -->
-                                            <a href="{% url 'detail_page' user_game.game.get_game_info_musts.id %}">
+                                            <a href="{% url 'detail_page' user_game.game.get_game_info_by_id.id %}">
                                                 <h6 class="card-title m-0">
-                                                    {{ user_game.game.get_game_info_musts.name }}
+                                                    {{ user_game.game.get_game_info_by_id.name }}
                                                 </h6>
                                             </a>
                                                  <!-- Game genres -->
                                                 {% if user_game.game.get_game_info_musts.genres %}
                                                     <p class="card-text text-muted small m-0">
-                                                        {% for genre in user_game.game.get_game_info_musts.genres %}
+                                                        {% for genre in user_game.game.get_game_info_by_id.genres %}
                                                         {{ genre.name }} {% endfor %}</p>
                                                 {% else %}
                                                     <p class="card-text text-muted small m-0">No genres</p>
                                                 {% endif %}
 
-                                                <p class="card-text text-muted small" id="users-added">
-                                                    Users added: {{ user_game.game.favourites.count }}
+                                                <p class="card-text text-muted small"
+                                                   id="users-added-{{ user_game.game.get_game_info_by_id.id }}">
+                                                    Users added: {{ user_game.game.favourites|not_soft_deleted_count }}
                                                 </p>
 
                                             </div>
@@ -87,7 +89,7 @@
                                                     {% if not user_game.game.is_deleted %}active{% endif %}"
                                                         type="button"
                                                         data-url_root="{% url 'musts_page' %}"
-                                                        data-game_id="{{ user_game.game.get_game_info_musts.id }}"
+                                                        data-game_id="{{ user_game.game.get_game_info_by_id.id }}"
                                                         name="game_id">
                                                     {% if user_game.game.is_deleted %}Must
                                                     {% else %}Unmust{% endif %}
