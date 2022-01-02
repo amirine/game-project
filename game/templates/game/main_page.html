@@ -47,7 +47,7 @@
                                            value="{{ platform.id }}" name="platforms"
                                            {% if  platform.id in chosen_platforms %}checked{% endif %}>
                                     <label class="form-check-label" for="{{ platform.abbreviation }}">
-                                        {{ platform.name }}</label>
+                                        {{ platform.abbreviation }}</label>
                                 </div>
                             {% endfor %}
                         </div>
@@ -67,7 +67,7 @@
                                     <input class="form-check-input" type="checkbox" id="{{ genre.name }}"
                                            value="{{ genre.id }}" name="genres"
                                            {% if  genre.id in chosen_genres %}checked{% endif %}>
-                                    <label class="form-check-label" for="{{ genre.name }}">{{ genre.name }}{{ test }}</label>
+                                    <label class="form-check-label" for="{{ genre.name }}">{{ genre.name }}</label>
                                 </div>
                             {% endfor %}
 
@@ -154,7 +154,7 @@
                                 <!-- Card image -->
                                 <div class="card-image-cover">
                                     <img class="card-img card-image-cover"
-                                         src="{% if game.cover.image_id %}{{ game.cover.image_id }}{% else %}
+                                         src="{% if game.cover_id %}{{ game.cover_id }}{% else %}
                                           https://www.beddingwarehouse.com.au/wp-content/uploads/2016/01/placeholder-featured-image.png
                                           {% endif %}" alt="Card image">
                                     <div class="card-img-overlay">
@@ -164,7 +164,7 @@
                                         <h4>{{ game.name }}</h4>
 
                                             {% if game.genres %}
-                                                <h6>{% for genre in game.genres %}{{ genre.name }} {% endfor %}</h6>
+                                                <h6>{% for genre in game.genres.all %}{{ genre.name }} {% endfor %}</h6>
                                             {% else %}
                                                 <h6>No genres</h6>
                                             {% endif %}

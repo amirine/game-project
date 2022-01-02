@@ -114,3 +114,12 @@ class IGDBRequestsHandler(IGDBWrapper):
             f"fields name, genres.name, cover.image_id; where id = {game_id};",
             "games"
         )[0]
+
+    def get_games(self, limit=10) -> list:
+        """Gets detail page data from IGDB"""
+
+        return self.get_json_data_by_query(
+            f"fields name, genres.name, platforms.abbreviation, summary, first_release_date, screenshots.image_id,"
+            f"rating, rating_count, aggregated_rating, aggregated_rating_count, cover.image_id; limit {limit};",
+            "games"
+        )
