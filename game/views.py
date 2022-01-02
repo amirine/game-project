@@ -1,6 +1,8 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
 from game.igdb_wrapper import IGDBRequestsHandler
+from game.models import Game
 from game.twitter_wrapper import TwitterWrapper
 from django.core.paginator import Paginator
 
@@ -25,6 +27,13 @@ class MainPageView(View):
             'genres': igdb.get_genres(),
             'platforms': igdb.get_platforms(),
         }
+
+        if request.user.is_authenticated:
+            context.update({
+                'user_favourite_games': list(request.user.favourites.filter(is_deleted=False).
+                                             values_list('game__game_id', flat=True))
+            })
+
         return render(request, 'game/main_page.html', context)
 
 
@@ -106,6 +115,7 @@ class DetailPageView(View):
     """
     View for detail page: displays wider info about the games.
     Games are followed by the tweets, containing hashtags with their names.
+    Games can be added to musts on must button click.
     """
 
     TWEETS_LIMIT = 5
@@ -123,7 +133,64 @@ class DetailPageView(View):
             'tweets': tweets.request_return_handle(game['name'], DetailPageView.TWEETS_LIMIT),
         }
 
+        if request.user.is_authenticated:
+            context.update({
+                'is_added': game_id in list(request.user.favourites.filter(is_deleted=False).
+                                            values_list('game__game_id', flat=True))
+            })
+
         return render(request, 'game/game_detail_page.html', context)
+
+    def post(self, request, game_id):
+        """
+        Adds game to favourites on must button click, deletes game from favourites on unmust button click.
+        Works on both main and musts pages must buttons.
+        """
+
+        if game_id not in list(request.user.favourites.values_list('game__game_id', flat=True)):
+            current_game, created = Game.objects.get_or_create(game_id=game_id)
+            request.user.favourites.create(game=current_game, user=request.user)
+        else:
+            current_game = request.user.favourites.get(game__game_id=game_id)
+            current_game.is_deleted = not current_game.is_deleted
+            current_game.save()
+
+        return HttpResponse(status=200)
+
+
+class MustsPageView(View):
+    """
+    View for musts page: displays favourite user games with the opportunity to soft delete items.
+    Soft delete and add performed by button unmust/must click.
+    """
+
+    GAMES_LIMIT = 18
+    GAMES_PER_PAGE = 12
+
+    @staticmethod
+    def get(request):
+        """Gets favourite user games (soft deleted items are not displayed)"""
+
+        favourite_games = request.user.favourites.filter(is_deleted=False)
+        context = {
+            'page_obj': pagination_generate(request, favourite_games, MustsPageView.GAMES_PER_PAGE),
+        }
+
+        return render(request, 'game/musts_page.html', context)
+
+    def post(self, request):
+        """
+        Soft deletes or adds to favourites again on button click: soft deleted items displayed.
+        After page reloading - get method - soft deleted items no more displayed.
+        """
+
+        game_id = int(request.POST['game_id'])
+
+        current_user_game = request.user.favourites.get(game__game_id=game_id)
+        current_user_game.is_deleted = not current_user_game.is_deleted
+        current_user_game.save()
+
+        return HttpResponse(status=200)
 
 
 def pagination_generate(request, games: list, games_per_page: int) -> Paginator:

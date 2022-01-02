@@ -18,15 +18,30 @@
                 <div class="row">
                     <div class="col-md-8 col-xl-8 col-sm-8 order-md-1 order-xl-0">
                         <div class="row">
-                            <div class="col-auto"><h2>{{ game.name }}</h2>
+                            <div class="col-auto">
+                                <h2>{{ game.name }}</h2>
                                 <h6>
                                     {% if game.genres %}
                                         {% for genre in game.genres %}{{ genre.name }} {% endfor %}
                                     {% else %}No genres{% endif %}
                                 </h6>
                             </div>
+
                             <div class="col-auto">
-                                <button class="btn btn-danger" type="button" id="must-button">MUST</button>
+
+                                {% if request.user.is_authenticated %}
+
+                                <button class="btn btn-danger must-button {% if is_added %}
+                                    active {% endif %}" type="button"
+                                            data-url_root="{% url 'detail_page' game.id %}"
+                                            data-game_id="{{ game.id }}"
+                                            name="game_id">
+                                        {% if not is_added %}Must
+                                        {% else %}Unmust{% endif %}
+                                </button>
+
+                                {% endif %}
+
                             </div>
                         </div>
                     </div>
@@ -183,6 +198,6 @@
 {% block script %}
 
     <!-- jQuery for must button -->
-    <script type="text/javascript" src={% static 'game/js/game_detail_page.js' %}></script>
+    <script type="text/javascript" src={% static 'game/js/must_button.js' %}></script>
 
 {% endblock %}

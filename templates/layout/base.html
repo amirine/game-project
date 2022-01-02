@@ -40,23 +40,25 @@
 
         <!-- Displays "My MUSTs" and "Log Out" buttons if user is authenticated -->
         Hello, <a class="text-white" href="{% url 'profile_info' request.user.id %}">{{ request.user.username }}</a>!
-            <a href="#">
+
+            <a href="{% url 'musts_page' %}" class="text-decoration-none">
                 <button class="btn btn-success ml-2" type="submit" id="must-button">My MUSTs</button>
             </a>
-            <a href="{% url 'account_logout' %}">
+
+            <a href="{% url 'account_logout' %}" class="text-decoration-none">
                 <button class="btn btn-light text-danger" type="submit" id="must-button">Log Out</button>
             </a>
 
          {% else %}
 
          <!-- Displays "Sign Up" and "Log In" buttons if user is not authenticated -->
-         <a href="{% url 'account_signup' %}">
-             <button class="btn btn-light text-danger" type="submit" id="must-button">Sign Up</button>
-         </a>
+            <a href="{% url 'account_signup' %}" class="text-decoration-none">
+                <button class="btn btn-light text-danger" type="submit" id="must-button">Sign Up</button>
+            </a>
             or
-         <a href="{% url 'account_login' %}">
-             <button class="btn btn-light text-danger" type="submit" id="must-button">Log In</button>
-         </a>
+            <a href="{% url 'account_login' %}" class="text-decoration-none">
+                <button class="btn btn-light text-danger" type="submit" id="must-button">Log In</button>
+            </a>
 
          {% endif %}
     </div>
@@ -77,6 +79,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
         integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
         crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <!-- Extra Scripts -->
 {% block script %}{% endblock %}

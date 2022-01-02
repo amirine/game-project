@@ -14,16 +14,6 @@ $(function () {
 
 });
 
-/* Handling must button: changing color and text on click */
-
-$("#must-button-main").click(function () {
-    if ($('#must-button-main').hasClass('active')) {
-        $('#must-button-main').removeClass('active').text('Must').button("refresh");
-    } else {
-        $("#must-button-main").addClass("active").text('Unmust').button("refresh");
-    }
-});
-
 /* Handling slider */
 
 {
@@ -93,4 +83,3 @@ $("#must-button-main").click(function () {
     });
 
 }
-

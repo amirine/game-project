@@ -176,6 +176,22 @@ body {
     overflow: hidden;
 }
 
+/* Game Card Style for musts page */
+
+.card-image-cover-musts {
+    background-size: cover;
+    height: 11rem;
+    position: relative;
+}
+
+.musts-card-line p, h6 {
+    margin-bottom: 0.3rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 /* Search input Styles */
 
 .search-input-bborder {
