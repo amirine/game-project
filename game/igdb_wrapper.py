@@ -67,59 +67,12 @@ class IGDBWrapper:
 
 class IGDBRequestsHandler(IGDBWrapper):
 
-    def get_genres(self) -> list:
-        """Gets all genres names and ids of a database"""
-
-        return self.get_json_data_by_query("fields name;", "genres")
-
-    def get_platforms(self) -> list:
-        """Gets all platforms names and ids of a database"""
-
-        return self.get_json_data_by_query("fields name;", "platforms")
-
-    def get_game_main_page_info(self, limit: int, filters=None) -> list:
-        """Gets main page data from IGDB"""
-
-        query = f"fields name, genres.name, cover.image_id; limit {limit}; "
-        if filters:
-            query += f"where total_rating >= {filters['lower_rating_bound']} & " \
-                     f"total_rating <= {filters['upper_rating_bound']}"
-            if filters.get('genres'):
-                query += f" & genres = ({', '.join(filters['genres'])})"
-            if filters.get('platforms'):
-                query += f" & platforms = ({', '.join(filters['platforms'])})"
-            query += ";"
-
-        return self.get_json_data_by_query(query, "games")
-
-    def get_game_detail_page_info(self, game_id: int) -> list:
-        """Gets detail page data from IGDB"""
-
-        return self.get_json_data_by_query(
-            f"fields name, genres.name, platforms.abbreviation, summary, first_release_date, screenshots.image_id,"
-            f"rating, rating_count, aggregated_rating, aggregated_rating_count; where id = {game_id};",
-            "games"
-        )[0]
-
-    def get_game_search_info(self, search_input: str, limit: int) -> list:
-        """Gets results of the search"""
-
-        return self.get_json_data_by_query(
-            f'fields name, genres.name, cover.image_id; search "{search_input}";limit {limit};', "games")
-
-    def get_musts_page_info(self, game_id: int) -> list:
-        """Gets musts page data from IGDB"""
-
-        return self.get_json_data_by_query(
-            f"fields name, genres.name, cover.image_id; where id = {game_id};",
-            "games"
-        )[0]
-
     def get_games(self, limit=10) -> list:
-        """Gets detail page data from IGDB"""
+        """Gets games data from IGDB to store it in database"""
 
         return self.get_json_data_by_query(
-            f"fields name, genres.name, platforms.abbreviation, summary, first_release_date, screenshots.image_id,"
-            f"rating, rating_count, aggregated_rating, aggregated_rating_count, cover.image_id; limit {limit};",
+            f"fields name, genres.name, platforms.abbreviation, platforms.name, summary, first_release_date, "
+            f"screenshots.image_id, screenshots.game, total_rating, rating, rating_count, aggregated_rating,"
+            f" aggregated_rating_count, cover.image_id; where aggregated_rating_count != null; limit {limit};",
             "games"
         )

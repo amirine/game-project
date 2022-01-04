@@ -1,10 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
-from game.igdb_wrapper import IGDBRequestsHandler
-from game.models import Game, GameNew, Genre, Platform, UserFavouriteGameNew
+from game.models import Game, Genre, Platform, UserFavouriteGame
 from game.twitter_wrapper import TwitterWrapper
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 class MainPageView(View):
@@ -13,14 +13,13 @@ class MainPageView(View):
     Called by initial page entering and by navbar logo click.
     """
 
-    GAMES_LIMIT = 18
     GAMES_PER_PAGE = 6
 
     @staticmethod
     def get(request):
         """Gets games from database not filtered"""
 
-        games = GameNew.objects.all()
+        games = Game.objects.all()
         context = {
             'page_obj': pagination_generate(request, games, MainPageView.GAMES_PER_PAGE),
             'genres': Genre.objects.all(),
@@ -29,12 +28,10 @@ class MainPageView(View):
 
         if request.user.is_authenticated:
             context.update({
-                'user_favourite_games': list(UserFavouriteGameNew.objects.filter(
+                'user_favourite_games': list(UserFavouriteGame.objects.filter(
                     user=request.user, is_deleted=False).values_list('game', flat=True))
             })
-        # print(UserFavouriteGameNew.objects.filter(user=request.user, is_deleted=False).values_list('game', flat=True))
-        # print(GameNew.objects.get(id=85031))
-        # print(85031 in UserFavouriteGameNew.objects.filter(user=request.user, is_deleted=False).values_list('game'))
+
         return render(request, 'game/main_page.html', context)
 
 
@@ -44,7 +41,6 @@ class MainPageViewFilter(View):
     displayed in filters sidebar area. Get method handles pagination.
     """
 
-    GAMES_LIMIT = 18
     GAMES_PER_PAGE = 6
 
     def get(self, request):
@@ -58,11 +54,13 @@ class MainPageViewFilter(View):
         """Processes POST request to main page: displays games filtered after filters apply"""
 
         filters = {
-            'lower_rating_bound': request.POST.get('rating-begin'),
-            'upper_rating_bound': request.POST.get('rating-end'),
-            'genres': request.POST.getlist('genres'),
-            'platforms': request.POST.getlist('platforms'),
+            'lower_rating_bound': int(request.POST.get('rating-begin')),
+            'upper_rating_bound': int(request.POST.get('rating-end')),
+            'genres': list(map(int, request.POST.getlist('genres'))),
+            'platforms': list(map(int, request.POST.getlist('platforms'))),
         }
+
+        print(filters)
 
         request.session['filters'] = filters
         context = self.generate_context(request, filters)
@@ -72,12 +70,12 @@ class MainPageViewFilter(View):
     def generate_context(request, filters: dict) -> dict:
         """Generates context for pages"""
 
-        games = GameNew.objects.filter(
+        games = Game.objects.filter(
             total_rating__lte=filters['upper_rating_bound'],
             total_rating__gte=filters['lower_rating_bound'],
-            genres__id__in=list(map(int, filters.get('genres'))),
-            platforms__id__in=list(map(int, filters.get('platforms'))),
-        )
+            genres__id__in=filters.get('genres') or [*Genre.objects.values_list('id', flat=True), None],
+            platforms__id__in=filters.get('platforms') or [*Platform.objects.values_list('id', flat=True), None],
+        ).distinct()
         return {
             'page_obj': pagination_generate(request, games, MainPageViewFilter.GAMES_PER_PAGE),
             'genres': Genre.objects.all(),
@@ -102,14 +100,13 @@ class MainPageViewSearch(View):
     def get(request):
         """Gets IGDB data using search input"""
 
-        igdb = IGDBRequestsHandler()
         request.session['search_game'] = request.GET.get('search-data') or request.session.get('search_game')
-        games = igdb.get_game_search_info(request.session.get('search_game'), MainPageViewSearch.GAMES_LIMIT)
+        games = Game.objects.filter(name__icontains=request.session['search_game'])
 
         context = {
             'page_obj': pagination_generate(request, games, MainPageViewSearch.GAMES_PER_PAGE),
-            'genres': igdb.get_genres(),
-            'platforms': igdb.get_platforms(),
+            'genres': Genre.objects.all(),
+            'platforms': Platform.objects.all(),
         }
 
         return render(request, 'game/main_page.html', context)
@@ -128,9 +125,8 @@ class DetailPageView(View):
     def get(request, game_id):
         """Gets game info by id and returns template"""
 
-        # igdb = IGDBRequestsHandler()
         tweets = TwitterWrapper()
-        game = GameNew.objects.get(id=game_id)
+        game = Game.objects.get(id=game_id)
 
         context = {
             'game': game,
@@ -139,9 +135,7 @@ class DetailPageView(View):
 
         if request.user.is_authenticated:
             context.update({
-                # 'is_added': game_id in list(request.user.favourites.filter(is_deleted=False).
-                #                             values_list('game__game_id', flat=True))
-                'is_added': UserFavouriteGameNew.objects.filter(
+                'is_added': UserFavouriteGame.objects.filter(
                     user=request.user, is_deleted=False, game__id=game_id).exists()
             })
 
@@ -153,12 +147,12 @@ class DetailPageView(View):
         Works on both main and musts pages must buttons.
         """
 
-        if UserFavouriteGameNew.objects.filter(user=request.user, game__id=game_id).exists():
+        if UserFavouriteGame.objects.filter(user=request.user, game__id=game_id).exists():
             current_game = request.user.favourite_games.get(game__id=game_id)
             current_game.is_deleted = not current_game.is_deleted
             current_game.save()
         else:
-            current_game = GameNew.objects.get(id=game_id)
+            current_game = Game.objects.get(id=game_id)
             request.user.favourite_games.create(game=current_game, user=request.user)
 
         return HttpResponse(status=200)
@@ -176,11 +170,6 @@ class MustsPageView(View):
     @staticmethod
     def get(request):
         """Gets favourite user games (soft deleted items are not displayed)"""
-
-        # favourite_games = request.user.favourites.filter(is_deleted=False)
-        # context = {
-        #     'page_obj': pagination_generate(request, favourite_games, MustsPageView.GAMES_PER_PAGE),
-        # }
 
         favourite_games = request.user.favourite_games.filter(is_deleted=False)
         context = {
@@ -212,3 +201,10 @@ def pagination_generate(request, games: list, games_per_page: int) -> Paginator:
     page_obj = paginator.get_page(page_number)
 
     return page_obj
+
+# настроить celery под нужное расписание
+# аббревиатуры и названия платформ
+# cover как onetoone field
+# брать game_id для скриншотов
+# поправить фильтры
+# лимит игр и пагинация

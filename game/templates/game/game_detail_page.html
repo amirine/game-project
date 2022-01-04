@@ -121,7 +121,7 @@
                         <div class="container text-white mb-4">
                             <div class="row">
 
-                                {% if game.genres %}
+                                {% if game.genres.all %}
                                     {% for genre in game.genres.all %}
                                         <button class="btn btn-danger mt-2 mr-2" type="button">{{ genre.name }}</button>
                                     {% endfor %}
@@ -137,10 +137,14 @@
                         <div class="container text-white mb-4">
                             <div class="row">
 
-                                {% if game.platforms %}
+                                {% if game.platforms.all %}
                                     {% for platform in game.platforms.all %}
                                         <button class="btn btn-danger mt-2 mr-2" type="button">
-                                            {{ platform.abbreviation }}
+                                            {% if platform.abbreviation %}
+                                                {{ platform.abbreviation }}
+                                            {% else %}
+                                                {{ platform.name }}
+                                            {% endif %}
                                         </button>
                                     {% endfor %}
                                 {% else %}

@@ -1,45 +1,19 @@
 from django.contrib.auth.models import User
 from django.db import models
-from game.igdb_wrapper import IGDBRequestsHandler
-
-
-class Game(models.Model):
-    """Game model"""
-
-    game_id = models.IntegerField()
-
-    def get_game_info_by_id(self):
-        """Gets game info for must page by game_id"""
-
-        igdb = IGDBRequestsHandler()
-        return igdb.get_musts_page_info(self.game_id)
-
-    def __str__(self):
-        return f'{self.game_id}'
-
-
-class UserFavouriteGame(models.Model):
-    """Model for user - favourite game pairs (soft deleted or not)"""
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    is_deleted = models.BooleanField(default=False)
-
-    class Meta:
-        default_related_name = 'favourites'
-
-    def __str__(self):
-        return f'{self.user.username} {self.game.game_id} {self.is_deleted}'
 
 
 class Platform(models.Model):
     """Model for game platforms"""
 
     id = models.IntegerField(primary_key=True)
-    abbreviation = models.CharField(max_length=40)
+    name = models.CharField(max_length=40, null=True, blank=True)
+    abbreviation = models.CharField(max_length=40, null=True, blank=True)
 
     def __str__(self):
         return f'{self.abbreviation}'
+
+    class Meta:
+        ordering = ['name']
 
 
 class Genre(models.Model):
@@ -51,8 +25,11 @@ class Genre(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+    class Meta:
+        ordering = ['name']
 
-class GameNew(models.Model):
+
+class Game(models.Model):
     """Model for games"""
 
     id = models.IntegerField(primary_key=True)
@@ -71,22 +48,26 @@ class GameNew(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+    class Meta:
+        ordering = ['-first_release_date']
+
 
 class Screenshot(models.Model):
     """Model for game screenshots"""
 
     id = models.IntegerField(primary_key=True)
     image_id = models.URLField()
-    game = models.ForeignKey(GameNew, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return f'Screen {self.id} for game {self.game_id}'
+        return f'Screen {self.id}'
 
-class UserFavouriteGameNew(models.Model):
+
+class UserFavouriteGame(models.Model):
     """Model for user - favourite game pairs (soft deleted or not)"""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    game = models.ForeignKey(GameNew, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     is_deleted = models.BooleanField(default=False)
 
     class Meta:

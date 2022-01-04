@@ -47,7 +47,12 @@
                                            value="{{ platform.id }}" name="platforms"
                                            {% if  platform.id in chosen_platforms %}checked{% endif %}>
                                     <label class="form-check-label" for="{{ platform.abbreviation }}">
-                                        {{ platform.abbreviation }}</label>
+                                        {% if platform.abbreviation %}
+                                            {{ platform.abbreviation }}
+                                        {% else %}
+                                            {{ platform.name }}
+                                        {% endif %}
+                                    </label>
                                 </div>
                             {% endfor %}
                         </div>
