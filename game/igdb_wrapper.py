@@ -1,5 +1,6 @@
 import os
 import requests
+
 from game.igdb_data_format import format_data
 
 
@@ -67,12 +68,13 @@ class IGDBWrapper:
 
 class IGDBRequestsHandler(IGDBWrapper):
 
-    def get_games(self, limit=10) -> list:
+    def get_games(self, limit: int) -> list:
         """Gets games data from IGDB to store it in database"""
 
         return self.get_json_data_by_query(
             f"fields name, genres.name, platforms.abbreviation, platforms.name, summary, first_release_date, "
             f"screenshots.image_id, screenshots.game, total_rating, rating, rating_count, aggregated_rating,"
-            f" aggregated_rating_count, cover.image_id; where aggregated_rating_count != null; limit {limit};",
+            f"aggregated_rating_count, cover.image_id, cover.game;"
+            f"where aggregated_rating_count != null & first_release_date != null; limit {limit};",
             "games"
         )

@@ -53,8 +53,8 @@
                                     <!-- Card image -->
                                     <div class="card w-100">
                                         <img class="card-img-top card-image-cover-musts"
-                                             src="{% if user_game.game.cover_id %}
-                                                {{ user_game.game.cover_id }}{% else %}
+                                             src="{% if user_game.game.cover.image_id %}
+                                                {{ user_game.game.cover.image_id }}{% else %}
                                           https://www.beddingwarehouse.com.au/wp-content/uploads/2016/01/placeholder-featured-image.png
                                           {% endif %}"
                                              alt="Card image cap">
@@ -117,12 +117,27 @@
             <div class="row justify-content-center">
                 <ul class="pagination justify-content-center">
                     <div class="d-grid gap-2 d-md-block">
-                        {% for page_number in page_obj.paginator.page_range %}
-                                <button onclick="location.href='?page={{ page_number }}'"
-                                        class="btn {% if page_number == page_obj.number %}btn-dark{% else %}
-                                        btn-danger{% endif %}" type="button">{{ page_number }}
+
+                        <!-- Previous page button -->
+                            <a href="?page={% if page_obj.has_previous %}{{ page_obj.previous_page_number }}{% endif %}"
+                               class="text-decoration-none">
+                                <button class="btn btn-danger {% if not page_obj.has_previous %} invisible {% endif %}"
+                                        type="button">Previous
                                 </button>
-                        {% endfor %}
+                            </a>
+
+                        <!-- Current page button -->
+                        <a href="?page={{ page_obj.number }}" class="text-decoration-none">
+                            <button class="btn btn-dark page-button"  type="button">{{ page_obj.number }}</button>
+                        </a>
+
+                        <!-- Next page button -->
+                            <a href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% endif %}"
+                               class="text-decoration-none">
+                                <button class="btn btn-danger {% if not page_obj.has_next %} invisible
+                                        {% endif %}" type="button">Next</button>
+                            </a>
+
                     </div>
                 </ul>
             </div>

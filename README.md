@@ -41,3 +41,22 @@ DB_PORT=
 ```
 
 Please copy .env.example content into .env file and fill the required credentials.
+
+How to update games database
+-------------------------
+For downloading games data from [IGDB API](https://api.igdb.com/) to your project database (or to update existing
+entries) use *update_db* django management command. Specified custom command can be called using:
+
+```sh
+python3 manage.py update_db
+```
+
+To refresh games data on regular basis celery tasks are also created. Start celery worker and beat by running
+
+```sh
+celery -A game_project worker -l info --logfile=celery.log --detach
+celery -A game_project beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+```
+
+Now you can check the logs in *celery.log* file and newly created celery tasks in Django admin interface *Periodic Tasks*
+section.

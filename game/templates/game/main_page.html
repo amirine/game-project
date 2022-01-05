@@ -88,10 +88,12 @@
                         <!-- Range input -->
                         <div class="multiple-range" data-min-distance="0.5">
                             <input id="rating-begin" name="rating-begin" type="range" min="0" max="100" step="1"
-                                   value="{% if chosen_lower_rating_bound %}{{ chosen_lower_rating_bound }}{% else %}0{% endif %}">
+                                   value="
+                                           {% if chosen_lower_rating_bound %}{{ chosen_lower_rating_bound }}{% else %}0{% endif %}">
                             <output for="rating-begin" data-expression="${value}"></output>
                             <input id="rating-end" name="rating-end" type="range" min="0" max="100" step="1"
-                                   value="{% if chosen_upper_rating_bound %}{{ chosen_upper_rating_bound }}{% else %}100{% endif %}">
+                                   value="
+                                           {% if chosen_upper_rating_bound %}{{ chosen_upper_rating_bound }}{% else %}100{% endif %}">
                             <output for="rating-end" data-expression="${value}"></output>
                         </div>
 
@@ -125,16 +127,16 @@
                 <!-- Column for search input -->
                 <div class="col-sm-8 col-md-8 col-xl-8 align-items-center">
                     <form id="search-data-form" method="GET" action="{% url 'main_page_search' %}">
-                    <div class="row pr-4 pl-4 pb-0 pt-3">
-                        <div class="input-group">
-                            <input class="form-control py-2 rounded-0 bg-transparent search-input-bborder text-center"
-                                   type="text" placeholder="Search..." id="example-search-input" name="search-data">
-                            <span class="input-group-append">
+                        <div class="row pr-4 pl-4 pb-0 pt-3">
+                            <div class="input-group">
+                                <input class="form-control py-2 rounded-0 bg-transparent search-input-bborder text-center"
+                                       type="text" placeholder="Search..." id="example-search-input" name="search-data">
+                                <span class="input-group-append">
                             <div class="input-group-text bg-transparent rounded-0 search-input-bborder">
                                 <i class="fa fa-search"></i></div>
                             </span>
+                            </div>
                         </div>
-                    </div>
                     </form>
                 </div>
 
@@ -149,57 +151,58 @@
 
                     {% if page_obj %}
 
-                    <!-- Row with content: 3 cards per row -->
-                    <div class="row row-cols-md-3 row-cols-xl-3 p-3 align-items-center">
+                        <!-- Row with content: 3 cards per row -->
+                        <div class="row row-cols-md-3 row-cols-xl-3 p-3 align-items-center">
 
-                        <!-- Game cards -->
-                        {% for game in page_obj %}
-                            <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
+                            <!-- Game cards -->
+                            {% for game in page_obj %}
+                                <div class="col-xl-4 col-md-6 col-sm-12 d-flex justify-content-center p-2">
 
-                                <!-- Card image -->
-                                <div class="card-image-cover">
-                                    <img class="card-img card-image-cover"
-                                         src="{% if game.cover_id %}{{ game.cover_id }}{% else %}
+                                    <!-- Card image -->
+                                    <div class="card-image-cover">
+                                        <img class="card-img card-image-cover"
+                                             src="{% if game.cover.image_id %}{{ game.cover.image_id }}{% else %}
                                           https://www.beddingwarehouse.com.au/wp-content/uploads/2016/01/placeholder-featured-image.png
                                           {% endif %}" alt="Card image">
-                                    <div class="card-img-overlay">
+                                        <div class="card-img-overlay">
 
-                                        <!-- Card grey cover -->
-                                        <span class="span-image p-2">
+                                            <!-- Card grey cover -->
+                                            <span class="span-image p-2">
                                         <h4>{{ game.name }}</h4>
 
-                                            {% if game.genres %}
-                                                <h6>{% for genre in game.genres.all %}{{ genre.name }} {% endfor %}</h6>
-                                            {% else %}
-                                                <h6>No genres</h6>
-                                            {% endif %}
+                                                {% if game.genres %}
+                                                    <h6>{% for genre in game.genres.all %}
+                                                        {{ genre.name }} {% endfor %}</h6>
+                                                {% else %}
+                                                    <h6>No genres</h6>
+                                                {% endif %}
 
-                                    <!-- Open game info button -->
+                                                <!-- Open game info button -->
                                     <a href="{% url 'detail_page' game.id %}">
                                         <button type="button" class="badge badge-light badge-pill border-0"
                                                 id="open-button-main">Open
                                         </button>
                                     </a>
 
-                                    <!-- Must game button -->
-                                    {% if request.user.is_authenticated %}
-                                    <button class="badge badge-light badge-pill border-0 must-button
+                                                <!-- Must game button -->
+                                                {% if request.user.is_authenticated %}
+                                                    <button class="badge badge-light badge-pill border-0 must-button
                                         {% if game.id in user_favourite_games %}active{% endif %}" type="button"
-                                            data-url_root="{% url 'detail_page' game.id %}"
-                                            data-game_id="{{ game.id }}"
-                                            name="game_id">
+                                                            data-url_root="{% url 'detail_page' game.id %}"
+                                                            data-game_id="{{ game.id }}"
+                                                            name="game_id">
                                         {% if game.id in user_favourite_games %}Unmust
                                         {% else %}Must{% endif %}
                                     </button>
-                                    {% endif %}
+                                                {% endif %}
 
                                         </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
 
-                    </div> <!-- Row content (cards) end -->
+                        </div> <!-- Row content (cards) end -->
 
                     {% else %}
                         <p class="text-dark text-center">No games found</p>
@@ -214,12 +217,27 @@
             <div class="row justify-content-center">
                 <ul class="pagination justify-content-center">
                     <div class="d-grid gap-2 d-md-block">
-                        {% for page_number in page_obj.paginator.page_range %}
-                                <button onclick="location.href='?page={{ page_number }}'"
-                                        class="btn {% if page_number == page_obj.number %}btn-dark{% else %}
-                                        btn-danger{% endif %}" type="button">{{ page_number }}
+
+                        <!-- Previous page button -->
+                            <a href="?page={% if page_obj.has_previous %}{{ page_obj.previous_page_number }}{% endif %}"
+                               class="text-decoration-none">
+                                <button class="btn btn-danger {% if not page_obj.has_previous %} invisible {% endif %}"
+                                        type="button">Previous
                                 </button>
-                        {% endfor %}
+                            </a>
+
+                        <!-- Current page button -->
+                        <a href="?page={{ page_obj.number }}" class="text-decoration-none">
+                            <button class="btn btn-dark page-button"  type="button">{{ page_obj.number }}</button>
+                        </a>
+
+                        <!-- Next page button -->
+                            <a href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% endif %}"
+                               class="text-decoration-none">
+                                <button class="btn btn-danger {% if not page_obj.has_next %} invisible
+                                        {% endif %}" type="button">Next</button>
+                            </a>
+
                     </div>
                 </ul>
             </div>

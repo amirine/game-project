@@ -143,6 +143,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 env = environ.Env()
 environ.Env.read_env()
 
+# Games limit settings
+GAMES_PER_PAGE_MAIN = 6
+GAMES_PER_PAGE_MUSTS = 8
+DB_UPDATE_GAMES_LIMIT = 24
+TWEETS_LIMIT_PER_GAME = 5
+
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
