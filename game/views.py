@@ -83,6 +83,8 @@ class MainPageViewFilter(View):
             'chosen_platforms': list(map(int, filters.get('platforms'))),
             'chosen_lower_rating_bound': filters.get('lower_rating_bound'),
             'chosen_upper_rating_bound': filters.get('upper_rating_bound'),
+            'user_favourite_games': list(UserFavouriteGame.objects.filter(
+                user=request.user, is_deleted=False).values_list('game', flat=True))
         }
 
 
@@ -101,6 +103,8 @@ class MainPageViewSearch(View):
 
         context = {
             'page_obj': pagination_generate(request, games, settings.GAMES_PER_PAGE_MAIN),
+            'user_favourite_games': list(UserFavouriteGame.objects.filter(
+                user=request.user, is_deleted=False).values_list('game', flat=True)),
             'genres': Genre.objects.all(),
             'platforms': Platform.objects.all(),
         }
