@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'users',
     'widget_tweaks',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -142,6 +143,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 env = environ.Env()
 environ.Env.read_env()
 
+# Games limit settings
+GAMES_PER_PAGE_MAIN = 6
+GAMES_PER_PAGE_MUSTS = 8
+DB_UPDATE_GAMES_LIMIT = 24
+TWEETS_LIMIT_PER_GAME = 5
+
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
@@ -184,3 +191,11 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 # Settings for Heroku deploy
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = "Europe/Minsk"

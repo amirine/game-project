@@ -8,9 +8,9 @@ def image_transform(image_id: str, size='720p') -> str:
 
 
 def date_transform(date: int) -> str:
-    """Transforms int date to <Month name> <year> format"""
+    """Transforms int date to <year>-<month>-<day> format"""
 
-    return datetime.fromtimestamp(date).strftime("%b %Y")
+    return datetime.fromtimestamp(date).strftime("%Y-%m-%d")
 
 
 def format_data(data_to_format: list) -> list:
