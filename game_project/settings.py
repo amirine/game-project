@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'users',
     'widget_tweaks',
     'django_celery_beat',
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [
