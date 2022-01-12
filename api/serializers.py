@@ -59,9 +59,14 @@ class CoverSerializer(serializers.ModelSerializer):
 
 class UserFavouriteGameSerializer(serializers.ModelSerializer):
 
+    def __init__(self, *args, **kwargs):
+        many = kwargs.pop('many', True)
+        super(UserFavouriteGameSerializer, self).__init__(many=many, *args, **kwargs)
+
     class Meta:
         model = UserFavouriteGame
-        fields = '__all__'
+        fields = ['game']
+        # depth = 1
 
 class UserSerializer(serializers.ModelSerializer):
 

@@ -40,6 +40,7 @@ class GameView(viewsets.ModelViewSet):
     serializer_class = GameSerializer
     pagination_class = MainPageGamesSetPagination
 
+
 class FUGView(viewsets.ModelViewSet):
     queryset = UserFavouriteGame.objects.all()
     serializer_class = UserFavouriteGameSerializer
@@ -50,9 +51,82 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
+# class FavouriteViewSet(viewsets.ModelViewSet):
+#     serializer_class = GameSerializer
+#     permission_classes = [IsAuthenticated]
+#
+#     def get_queryset(self):
+#         return Game.objects.filter(favourite_games__is_deleted=False, favourite_games__user=self.request.user)
+
+
+class FavouriteViewSet(viewsets.ModelViewSet):
+    serializer_class = UserFavouriteGameSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return UserFavouriteGame.objects.filter(user=self.request.user, is_deleted=False)
+
+    def create(self, request, *args, **kwargs):
+        # serializer = self.get_serializer(data=request.data)
+        # if UserFavouriteGame.objects.filter(game__id=request.data['id']).first():
+
+        if int(request.data['game']) in list(UserFavouriteGame.objects.filter(
+                user=request.user).values_list('game', flat=True)):
+            serializer = UserFavouriteGameSerializer(
+                UserFavouriteGame.objects.filter(user=request.user, game__id=request.data['game']).first(),
+                data=request.data
+            )
+            print('exists')
+        else:
+            # serializer = UserFavouriteGameSerializer(data=request.data)
+            serializer = self.get_serializer(data=request.data)
+            print('not exists')
+
+        if serializer.is_valid():
+            # serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+        # def create(self, request, *args, **kwargs):
+        #     serializer = self.get_serializer(data=request.data)
+        #     serializer.is_valid(raise_exception=True)
+        #     self.perform_create(serializer)
+        #     headers = self.get_success_headers(serializer.data)
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        # game = UserFavouriteGame.get_or_create(request.data['id'])
+        # serializer = SnippetSerializer(snippet, data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        # headers = self.get_success_headers(serializer.data)
+        # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+    # def put(self, request, pk, format=None):
+    #     snippet = self.get_object(pk)
+    #     serializer = SnippetSerializer(snippet, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # def create(self, request, *args, **kwargs):
+    #     many = True if isinstance(request.data, list) else False
+    #     serializer = BookSerializer(data=request.data, many=many)
+    #     serializer.is_valid(raise_exception=True)
+    #     author = request.user  # you can change here
+    #     book_list = [Book(**data, author=author) for data in serializer.validated_data]
+    #     Book.objects.bulk_create(book_list)
+    #     return Response({}, status=status.HTTP_201_CREATED)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, is_deleted=False)
+
+
 @api_view(['POST'])
 def favourites(request, *args, **kwargs):
-
     if request.method == 'POST':
         print(request.body)
         print(args)
@@ -64,12 +138,11 @@ def favourites(request, *args, **kwargs):
 
 
 class UserFavouriteGamesList(APIView):
-
     permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
-        user = User.objects.filter(id=request.user.id)
-        serializer = UserSerializer(user, many=True)
+        games = UserFavouriteGame.objects.filter(user=self.request.user, is_deleted=False)
+        serializer = UserFavouriteGameSerializer(games, many=True)
         return Response(serializer.data)
 
     # def post(self, request, format=None):
@@ -89,34 +162,4 @@ class UserFavouriteGamesList(APIView):
     #         return Response(serializer.data, status=status.HTTP_201_CREATED)
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    #
-    # def post(self, request, format=None):
-    #     serializer = UserFavouriteGameSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-#
-# class OrganisationApiView(APIView):
-#
-#     serializers_class = serializers.OrganisationSerializer
-#     parser_classes = [JSONParser]
-#
-#     def get(self, request, formate=None):
-#         return Response({"message": "You are Cool!!"})
-#
-#     def post(self, request, formate=None):
-#         serializer = self.serializers_class(data=request.data)
-#         print(serializer)
-#
-#         if serializer.is_valid():
-#             organisation_name = serializer.validated_data.get('organisation_name')
-#             message = f"Reached POST {organisation_name}"
-#             return Response({'message': message, status: 'HTTP_200_OK'})
-#         else:
-#             return Response(
-#                 serializer.errors,
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )

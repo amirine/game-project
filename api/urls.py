@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from api.views import GameViewSet, GenreViewSet, PlatformViewSet, ScreenshotViewSet, CoverViewSet, \
-    favourites, UserFavouriteGamesList, FUGView, UserViewSet
+    favourites, UserFavouriteGamesList, FUGView, UserViewSet, FavouriteViewSet
 
 router = DefaultRouter()
 router.register(r'api-games', GameViewSet)
@@ -12,6 +12,7 @@ router.register(r'api-screenshots', ScreenshotViewSet)
 router.register(r'api-covers', CoverViewSet)
 router.register(r'api-fuv', FUGView)
 router.register(r'api-user', UserViewSet)
+router.register(r'api-test', FavouriteViewSet, 'favourites')
 # router.register(r'api-test', UserFavouriteGamesList)
 
 # router.register(r'api-favourites1', UserFavouriteGamesList)

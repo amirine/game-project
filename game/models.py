@@ -45,7 +45,7 @@ class Game(models.Model):
     aggregated_rating_count = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.id} {self.name}'
 
     class Meta:
         ordering = ['-first_release_date']
