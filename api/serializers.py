@@ -5,8 +5,10 @@ from rest_framework.pagination import PageNumberPagination
 from game.models import Game, Genre, Platform, Screenshot, Cover, UserFavouriteGame
 from django.conf import settings
 
+
 class MainPageGamesSetPagination(PageNumberPagination):
     page_size = settings.GAMES_PER_PAGE_MAIN
+
 
 class MustsPageGamesSetPagination(PageNumberPagination):
     page_size = settings.GAMES_PER_PAGE_MUSTS
@@ -57,23 +59,18 @@ class CoverSerializer(serializers.ModelSerializer):
         model = Cover
         fields = '__all__'
 
+
 class UserFavouriteGameSerializer(serializers.ModelSerializer):
-
-    def __init__(self, *args, **kwargs):
-        many = kwargs.pop('many', True)
-        super(UserFavouriteGameSerializer, self).__init__(many=many, *args, **kwargs)
-
     class Meta:
         model = UserFavouriteGame
         fields = ['game']
         # depth = 1
 
-class UserSerializer(serializers.ModelSerializer):
 
+class UserSerializer(serializers.ModelSerializer):
     favourite_games1 = serializers.SerializerMethodField('get_cars')
 
     def get_cars(self, user):
-
         game_queryset = User.objects.filter(favourite_games__is_deleted=False).values('id')
         serializer = GameSerializer(instance=game_queryset, many=True, context=self.context)
 
