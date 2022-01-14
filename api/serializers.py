@@ -7,80 +7,70 @@ from django.conf import settings
 
 
 class MainPageGamesSetPagination(PageNumberPagination):
+    """Sets games limit per page displayed on Main Page"""
+
     page_size = settings.GAMES_PER_PAGE_MAIN
 
 
 class MustsPageGamesSetPagination(PageNumberPagination):
+    """Sets games limit per page displayed on Musts Page"""
+
     page_size = settings.GAMES_PER_PAGE_MUSTS
 
 
 class GameSerializer(serializers.ModelSerializer):
+    """Serializer for Game Model"""
+
     class Meta:
         model = Game
         fields = '__all__'
-        depth = 1
+        # depth = 1
 
     def to_representation(self, instance):
+        """Ensures only not null keys are displayed"""
+
         result = super(GameSerializer, self).to_representation(instance)
         return {key: result[key] for key in result if result[key]}
 
-    # def __init__(self, instance=None, data=None, **kwargs):
-    #     if instance:
-    #         setattr(self.Meta, 'depth', 1)
-    #     else:
-    #         setattr(self.Meta, 'depth', 0)
-    #     super(GameSerializer, self).__init__(instance, data, **kwargs)
-
 
 class GenreSerializer(serializers.ModelSerializer):
+    """Serializer for Genre Model"""
+
     class Meta:
         model = Genre
         fields = '__all__'
 
 
 class PlatformSerializer(serializers.ModelSerializer):
+    """Serializer for Platform Model"""
+
     class Meta:
         model = Platform
         fields = '__all__'
 
     def to_representation(self, instance):
+        """Ensures only not null keys are displayed"""
+
         result = super(PlatformSerializer, self).to_representation(instance)
         return {key: result[key] for key in result if result[key]}
 
 
 class ScreenshotSerializer(serializers.ModelSerializer):
+    """Serializer for Screenshot Model"""
+
     class Meta:
         model = Screenshot
         fields = '__all__'
 
 
 class CoverSerializer(serializers.ModelSerializer):
+    """Serializer for Cover Model"""
+
     class Meta:
         model = Cover
         fields = '__all__'
 
-
-class UserFavouriteGameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserFavouriteGame
-        fields = ['game']
-        # depth = 1
-
-
-class UserSerializer(serializers.ModelSerializer):
-    favourite_games1 = serializers.SerializerMethodField('get_cars')
-
-    def get_cars(self, user):
-        game_queryset = User.objects.filter(favourite_games__is_deleted=False).values('id')
-        serializer = GameSerializer(instance=game_queryset, many=True, context=self.context)
-
-        return serializer.data
-
-    #
-    # favourite_games_deleted = serializers.PrimaryKeyRelatedField(
-    #     many=True, queryset=UserFavouriteGame.objects.filter(is_deleted=True)
-    # )
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'favourite_games1']
+# class CustomSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Media
+#         read_only_fields = ('id', 'karma', 'createdByUser', 'creationDate')
