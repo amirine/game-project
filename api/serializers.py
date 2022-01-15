@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
+from abc import ABC
 from rest_framework import serializers
+from rest_framework.fields import CurrentUserDefault
 from rest_framework.pagination import PageNumberPagination
 
 from game.models import Game, Genre, Platform, Screenshot, Cover, UserFavouriteGame
@@ -24,7 +25,6 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = '__all__'
-        # depth = 1
 
     def to_representation(self, instance):
         """Ensures only not null keys are displayed"""
@@ -70,7 +70,45 @@ class CoverSerializer(serializers.ModelSerializer):
         model = Cover
         fields = '__all__'
 
-# class CustomSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Media
-#         read_only_fields = ('id', 'karma', 'createdByUser', 'creationDate')
+
+class FavouritesPostSerializer(serializers.Serializer):
+    """
+    Serializer created to validate POST method body for FavouritesAPIView. Takes {action} and {game_ids} values from
+    POST request and checks their correctness.
+    """
+
+    action = serializers.ChoiceField(choices=["add", "delete"])
+    game_ids = serializers.ListField()
+    # user = serializers.HiddenField()
+
+    def validate(self, data):
+        """
+        Validates incoming games according to the action: prohibits adding games that already exist in user's musts or
+        don't exist in Games database, prohibits deleting games not added to user's musts.
+        """
+        print(self.context)
+
+        def exists_in_database(game_id: int) -> bool:
+            """Checks game existence in database by id"""
+
+            return Game.objects.filter(id=game_id).first()
+
+        def exists_in_user_musts(game_id: int, user=self.context['user']) -> bool:
+            # CurrentUserDefault()(self)
+            """Checks game existence in {user}'s musts by id"""
+
+            return UserFavouriteGame.objects.filter(game__id=game_id, user=user, is_deleted=False).first()
+
+        for game_id in data["game_ids"]:
+
+            if data["action"] == "add" and not exists_in_database(game_id):
+                raise serializers.ValidationError(detail=f"Game {game_id} doesn't exist in database.")
+
+            if data["action"] == "add" and exists_in_user_musts(game_id):
+                raise serializers.ValidationError(detail=f"Game {game_id} already exists in user musts.")
+
+            if data["action"] == "delete" and not exists_in_user_musts(game_id):
+                raise serializers.ValidationError(detail=f"Game {game_id} isn't added to current user musts.")
+
+        return data
+#     {"action": "add", "game_ids": [47]}
