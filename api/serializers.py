@@ -1,6 +1,4 @@
-from abc import ABC
 from rest_framework import serializers
-from rest_framework.fields import CurrentUserDefault
 from rest_framework.pagination import PageNumberPagination
 
 from game.models import Game, Genre, Platform, Screenshot, Cover, UserFavouriteGame
@@ -79,14 +77,12 @@ class FavouritesPostSerializer(serializers.Serializer):
 
     action = serializers.ChoiceField(choices=["add", "delete"])
     game_ids = serializers.ListField()
-    # user = serializers.HiddenField()
 
     def validate(self, data):
         """
         Validates incoming games according to the action: prohibits adding games that already exist in user's musts or
         don't exist in Games database, prohibits deleting games not added to user's musts.
         """
-        print(self.context)
 
         def exists_in_database(game_id: int) -> bool:
             """Checks game existence in database by id"""
@@ -94,7 +90,6 @@ class FavouritesPostSerializer(serializers.Serializer):
             return Game.objects.filter(id=game_id).first()
 
         def exists_in_user_musts(game_id: int, user=self.context['user']) -> bool:
-            # CurrentUserDefault()(self)
             """Checks game existence in {user}'s musts by id"""
 
             return UserFavouriteGame.objects.filter(game__id=game_id, user=user, is_deleted=False).first()
@@ -105,10 +100,9 @@ class FavouritesPostSerializer(serializers.Serializer):
                 raise serializers.ValidationError(detail=f"Game {game_id} doesn't exist in database.")
 
             if data["action"] == "add" and exists_in_user_musts(game_id):
-                raise serializers.ValidationError(detail=f"Game {game_id} already exists in user musts.")
+                raise serializers.ValidationError(detail=f"Game {game_id} already exists in user's musts.")
 
             if data["action"] == "delete" and not exists_in_user_musts(game_id):
-                raise serializers.ValidationError(detail=f"Game {game_id} isn't added to current user musts.")
+                raise serializers.ValidationError(detail=f"Game {game_id} isn't added to user's musts.")
 
         return data
-#     {"action": "add", "game_ids": [47]}

@@ -107,4 +107,4 @@ class FavouritesAPIView(APIView, MustsPageGamesSetPagination):
                 user_game.save()
             instances.append(Game.objects.get(id=game_id))
         serializer = GameSerializer(instances, many=True)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -58,22 +58,15 @@ celery -A game_project worker -l info --logfile=celery.log --detach
 celery -A game_project beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 ```
 
-Now you can check the logs in <code>celery.log</code> file and newly created celery tasks in Django admin interface *Periodic Tasks*
+Now you can check the logs in <code>celery.log</code> file and newly created celery tasks in Django admin
+interface <code>Periodic Tasks</code>
 section.
 
 How to use API
 -------------------------
 
-Most of the requests to the API are available only for authorized users. So in order to use it, please create an
-account, or a superuser with all the available permissions - testing project's REST API would be much easier and wider.
-
-To create admin user for the project, just run
-
-```sh
-python3 manage.py createsuperuser
-```
-
-and fill the required fields info. Creating any type of user will enable you to add and delete games from musts.
+Most of API requests are available only for authorized users. In order to use project's API properly, please create a user
+account or run <code>python3 manage.py createsuperuser</code> to specify an admin user with expanded permissions.
 
 Generally project's REST API functionality includes:
 
@@ -82,57 +75,52 @@ Generally project's REST API functionality includes:
 3. Adding new game to database (available for admin user).
 4. Updating a particular game (available for admin user).
 5. Deleting a game (available for admin user).
-6. Getting list of favourite games of an authorized user with pagination (available for authorized users).
-7. Adding games to favourites for an authorized user (available for authorized users).
-8. Deleting games from favourites for an authorized user (available for authorized users).
+6. Getting list of favourite games (available for authorized users).
+7. Adding games to favourites (available for authorized users).
+8. Deleting games from favourites (available for authorized users).
 
 Points 1-4 are similarly implemented for genres, platforms, screenshots and covers. Points 6-8 are meant to be performed
-within every individual user: users has access to their own musts only.
+within every individual user: users have access to their own musts only.
 
-To retrieve games stored in database make <code>GET</code> request to <code> http://127.0.0.1:8000/api/games/ </code>:
+To retrieve games stored in database make <code>GET</code> request to http://127.0.0.1:8000/api/games/:
 
 ```sh
 curl "http://127.0.0.1:8000/api/games/"
-```
-
-or
-
-```sh
 curl "http://127.0.0.1:8000/api/games/ -u "login:password"
 ```
 
-This operation doesn't require any user authorization, so both the requests will return the same data. Games are
-displayed with pagination. Login and password set according user credentials.
+This operation doesn't require any user authorization, so both the requests will return the same data. Games are displayed
+with pagination, login and password are set according user credentials.
 
-To get all information from a specific game run:
+To get information from a specific game run:
 
 ```sh
 curl http://127.0.0.1:8000/api/games/1/
 ```
 
-POST, PUT and DELETE methods are prohibited for unauthorized users. To perform the request you should pass some extra
-info about the user: login and password (make sure to set Basic Auth to Postman for such requests in case of using this
-service).
+<code>POST</code>, <code>PUT</code> and <code>DELETE</code> methods are prohibited for unauthorized users. To perform
+the request pass some extra info about the user: login and password (make sure to set Basic Auth to Postman for such
+requests in case of using this service).
 
-POST method (new entry creation):
+To create new entry run:
 
 ```sh
 curl -X POST http://127.0.0.1:8000/api/games/ -H "Content-Type: application/json" -u "login:password" -d '{"id": 1, "name": "Test Game"}'
 ```
 
-DELETE method (entry removal):
+To delete a particular game run:
 
 ```sh
 curl -X DELETE http://127.0.0.1:8000/api/games/1/ -u "login:password"
 ```
 
-PUT method (entry update):
+To update the game run:
 
 ```sh
 curl -X PUT http://127.0.0.1:8000/api/games/1/ -u "login:password" -H "Content-Type: application/json" -d '{"id": 1, "name": "Test Game New"}'
 ```
 
-Analogically genres, platforms, screenshots and covers, appropriate urls:
+Genres, platforms, screenshots and covers analogically, appropriate urls:
 
 ```sh
 curl "http://127.0.0.1:8000/api/genres/"
@@ -141,10 +129,27 @@ curl "http://127.0.0.1:8000/api/screenshots/"
 curl "http://127.0.0.1:8000/api/covers/"
 ```
 
-Requests to favourite user games have a little another structure. Get method for favourite games represents list of
-favourite games for a particular user. Available only for auth users, pagination implemented
+Requests to favourite user games have a slightly different structure. <code>GET</code> method for favourite games
+represents list of favourite games for a particular user:
 
 ```sh
-curl "http://127.0.0.1:8000/api/favourites/" -u "ira:admin"
+curl "http://127.0.0.1:8000/api/favourites/" -u "login:password"
 ```
 
+Method available only for authorized users, pagination implemented. <code>POST</code> method performs 2 basic tasks: add
+and delete.
+<code>POST</code> request body has the following format:
+
+```sh
+{
+    "action": <action to perform in string format> (available actions: "add", "delete")
+    "game_ids": <list of game ids>
+}
+```
+
+To make a <code>POST</code> request run:
+
+```sh
+curl -X POST http://127.0.0.1:8000/api/favourites/ -H "Content-Type: application/json" -u "login:password" -d '{"action": "add", "game_ids": [1,2]}'
+curl -X POST http://127.0.0.1:8000/api/favourites/ -H "Content-Type: application/json" -u "login:password" -d '{"action": "delete", "game_ids": [1,2]}'
+```
