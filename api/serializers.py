@@ -22,12 +22,13 @@ class GameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = '__all__'
+        fields = ['id', 'name', 'genres', 'platforms', 'total_rating', 'summary', 'first_release_date', 'rating',
+                  'rating_count', 'aggregated_rating', 'aggregated_rating_count']
 
     def to_representation(self, instance):
         """Ensures only not null keys are displayed"""
 
-        result = super(GameSerializer, self).to_representation(instance)
+        result = super().to_representation(instance)
         return {key: result[key] for key in result if result[key]}
 
 
@@ -36,7 +37,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Genre
-        fields = '__all__'
+        fields = ['id', 'name']
 
 
 class PlatformSerializer(serializers.ModelSerializer):
@@ -44,12 +45,12 @@ class PlatformSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Platform
-        fields = '__all__'
+        fields = ['id', 'name', 'abbreviation']
 
     def to_representation(self, instance):
         """Ensures only not null keys are displayed"""
 
-        result = super(PlatformSerializer, self).to_representation(instance)
+        result = super().to_representation(instance)
         return {key: result[key] for key in result if result[key]}
 
 
@@ -58,7 +59,7 @@ class ScreenshotSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Screenshot
-        fields = '__all__'
+        fields = ['id', 'image_id', 'game']
 
 
 class CoverSerializer(serializers.ModelSerializer):
@@ -66,7 +67,7 @@ class CoverSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cover
-        fields = '__all__'
+        fields = ['id', 'image_id', 'game']
 
 
 class FavouritesPostSerializer(serializers.Serializer):
@@ -87,12 +88,12 @@ class FavouritesPostSerializer(serializers.Serializer):
         def exists_in_database(game_id: int) -> bool:
             """Checks game existence in database by id"""
 
-            return Game.objects.filter(id=game_id).first()
+            return Game.objects.filter(id=game_id).exists()
 
         def exists_in_user_musts(game_id: int, user=self.context['user']) -> bool:
             """Checks game existence in {user}'s musts by id"""
 
-            return UserFavouriteGame.objects.filter(game__id=game_id, user=user, is_deleted=False).first()
+            return UserFavouriteGame.objects.filter(game__id=game_id, user=user, is_deleted=False).exists()
 
         for game_id in data["game_ids"]:
 
