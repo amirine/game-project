@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./game_project:/game_project
+    command: >
+      sh -c "python3 manage.py makemigrations &&
+             python3 manage.py migrate &&
+             python3 manage.py update_db &&
+             python3 manage.py runserver 0.0.0.0:8000"
+
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:10-alpine
+    env_file:
+      - ./.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+#    ports:
+#      - "5433:5433"
+
+#  db:
+#    image: postgres:10-alpine
+#    volumes:
+#      - pgdata:/var/lib/postgresql/data
+#    environment:
+#      POSTGRES_NAME="postgresnew1"
+#      - POSTGRES_USER="postgres"
+#      - POSTGRES_PASSWORD=dasha1408ira
+#    environment:
+#      POSTGRES_DB: "postgresnew1"
+#      POSTGRES_USER: "postgres"
+#      POSTGRES_PASSWORD: "dasha1408ira"
+#    ports:
+#      - "5433:5433"
+
+  redis:
+    image: redis:alpine
+
+#  redis:
+#    image: redis:alpine
+#    restart: always
+#    container_name: 'myredis'
+#    command: redis-server
+#    ports:
+#      - '6379:6379'
+
+  celery:
+    restart: always
+#    container_name: 'mycelery'
+    build:
+      context: .
+    command: celery -A game_project worker -l info
+    volumes:
+      - ./game_project:/game_project
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+      - app
+
+volumes:
+  pgdata:
