@@ -157,7 +157,7 @@ curl -X POST http://127.0.0.1:8000/api/favourites/ -H "Content-Type: application
 Running this app with Docker
 -------------------------
 
-You'll need to have Docker installed. If you're new to it and want to learn more details check
+You'll need to have Docker installed. If you're new to it and want to learn some more details check
 out [Docker website](https://docs.docker.com/get-docker/) and install the required version.
 
 To create the images and start the containers set additional environment variables in the <code>.env</code> file
@@ -168,14 +168,10 @@ POSTGRES_PASSWORD=
 POSTGRES_DB=
 ```
 
-and update <code>DB_HOST</code> and <code>DB_PORT</code> values to
-
-```sh
-DB_HOST=db
-DB_PORT=5432
-```
-
-Now you can run the app via
+and update <code>DB_HOST=db</code> (service name defined in <code>docker-compose.yml</code> file) and <code>
+DB_PORT=5432</code> (default value for postgres database). Make sure <code>POSTGRES_{VARIABLE}</code> variables are
+consistent with <code>DB_{VARIABLE}</code> variables from <code>.env</code> file, make changes where necessary. Now you
+can run the app via
 
 ```sh
 docker-compose up --build

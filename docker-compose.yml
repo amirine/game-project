@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 
 services:
 
@@ -20,7 +20,7 @@ services:
       - db
 
   db:
-    image: postgres:10-alpine
+    image: postgres:14.1-alpine
     env_file:
       - ./game_project/.env
     volumes:
@@ -33,7 +33,7 @@ services:
     restart: always
     build:
       context: .
-    command: celery -A game_project worker -l info
+    command: celery -A game_project beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
       - ./game_project:/game_project
     env_file:
