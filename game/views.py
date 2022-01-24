@@ -109,11 +109,15 @@ class MainPageViewSearch(View):
 
         context = {
             'page_obj': pagination_generate(request, games, settings.GAMES_PER_PAGE_MAIN),
-            'user_favourite_games': list(UserFavouriteGame.objects.filter(
-                user=request.user, is_deleted=False).values_list('game', flat=True)),
             'genres': Genre.objects.all(),
             'platforms': Platform.objects.all(),
         }
+
+        if request.user.is_authenticated:
+            context.update({
+                'user_favourite_games': list(UserFavouriteGame.objects.filter(
+                    user=request.user, is_deleted=False).values_list('game', flat=True))
+            })
 
         return render(request, 'game/main_page.html', context)
 
