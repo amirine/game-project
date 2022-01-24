@@ -75,7 +75,7 @@ class MainPageViewFilter(View):
             platforms__id__in=filters.get('platforms') or [*Platform.objects.values_list('id', flat=True), None],
         ).distinct()
 
-        return {
+        context = {
             'page_obj': pagination_generate(request, games, settings.GAMES_PER_PAGE_MAIN),
             'genres': Genre.objects.all(),
             'platforms': Platform.objects.all(),
@@ -83,9 +83,15 @@ class MainPageViewFilter(View):
             'chosen_platforms': list(map(int, filters.get('platforms'))),
             'chosen_lower_rating_bound': filters.get('lower_rating_bound'),
             'chosen_upper_rating_bound': filters.get('upper_rating_bound'),
-            'user_favourite_games': list(UserFavouriteGame.objects.filter(
-                user=request.user, is_deleted=False).values_list('game', flat=True))
         }
+
+        if request.user.is_authenticated:
+            context.update({
+                'user_favourite_games': list(UserFavouriteGame.objects.filter(
+                    user=request.user, is_deleted=False).values_list('game', flat=True))
+            })
+
+        return context
 
 
 class MainPageViewSearch(View):
