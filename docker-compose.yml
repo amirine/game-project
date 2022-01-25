@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./game_project:/game_project
+    command: >
+      sh -c "python3 manage.py migrate &&
+             python3 manage.py update_db &&
+             python3 manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - ./game_project/.env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14.1-alpine
+    env_file:
+      - ./game_project/.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A game_project beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - ./game_project:/game_project
+    env_file:
+      - ./game_project/.env
+    depends_on:
+      - db
+      - redis
+      - app
+
+volumes:
+  pgdata:

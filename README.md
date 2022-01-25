@@ -65,8 +65,8 @@ section.
 How to use API
 -------------------------
 
-Most of API requests are available only for authorized users. In order to use project's API properly, please create a user
-account or run <code>python3 manage.py createsuperuser</code> to specify an admin user with expanded permissions.
+Most of API requests are available only for authorized users. In order to use project's API properly, please create a
+user account or run <code>python3 manage.py createsuperuser</code> to specify an admin user with expanded permissions.
 
 Generally project's REST API functionality includes:
 
@@ -89,8 +89,8 @@ curl "http://127.0.0.1:8000/api/games/"
 curl "http://127.0.0.1:8000/api/games/ -u "login:password"
 ```
 
-This operation doesn't require any user authorization, so both the requests will return the same data. Games are displayed
-with pagination, login and password are set according user credentials.
+This operation doesn't require any user authorization, so both the requests will return the same data. Games are
+displayed with pagination, login and password are set according user credentials.
 
 To get information from a specific game run:
 
@@ -153,3 +153,28 @@ To make a <code>POST</code> request run:
 curl -X POST http://127.0.0.1:8000/api/favourites/ -H "Content-Type: application/json" -u "login:password" -d '{"action": "add", "game_ids": [1,2]}'
 curl -X POST http://127.0.0.1:8000/api/favourites/ -H "Content-Type: application/json" -u "login:password" -d '{"action": "delete", "game_ids": [1,2]}'
 ```
+
+Running this app with Docker
+-------------------------
+
+You'll need to have Docker installed. If you're new to it and want to learn some more details check
+out [Docker website](https://docs.docker.com/get-docker/) and install the required version.
+
+To create the images and start the containers set additional environment variables in the <code>.env</code> file
+
+```sh
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+```
+
+and update <code>DB_HOST=db</code> (service name defined in <code>docker-compose.yml</code> file) and <code>
+DB_PORT=5432</code> (default value for postgres database). Make sure <code>POSTGRES_{VARIABLE}</code> variables are
+consistent with <code>DB_{VARIABLE}</code> variables from <code>.env</code> file, make changes where necessary. Now you
+can run the app via
+
+```sh
+docker-compose up --build
+```
+
+and test it out at <code>http://localhost:8000 </code>. 

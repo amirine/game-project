@@ -33,7 +33,7 @@ class Game(models.Model):
     """Model for games"""
 
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=40, blank=True)
+    name = models.CharField(max_length=100, blank=True)
     genres = models.ManyToManyField(Genre, blank=True)
     platforms = models.ManyToManyField(Platform, blank=True)
     total_rating = models.FloatField(null=True, blank=True)
